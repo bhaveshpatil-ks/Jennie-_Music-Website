@@ -76,13 +76,17 @@ export const AppLayout = () => {
   // Auth state & onboarding gate
   const user = useAuthStore((state) => state.user);
   const loading = useAuthStore((state) => state.loading);
-  const [hasEnteredGuest, setHasEnteredGuest] = useState(() => {
-    try {
-      return localStorage.getItem('jennie_guest_session') === 'true';
-    } catch (_) {
-      return false;
-    }
-  });
+  const [hasEnteredGuest, setHasEnteredGuest] = useState(true);
+
+  // Safety splash timeout: Ensure the initial loading state never hangs
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (useAuthStore.getState().loading) {
+        useAuthStore.setState({ loading: false });
+      }
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Initialize Firebase Auth listener
   const initAuth = useAuthStore((state) => state.initAuth);
