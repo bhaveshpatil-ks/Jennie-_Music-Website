@@ -43,3 +43,8 @@ tmp/
 temp/
 *.tmp
 *.bak
+
+# Separate Jennie App Repository
+jennie app codes/
+jennie  codes/
+jennie*/
