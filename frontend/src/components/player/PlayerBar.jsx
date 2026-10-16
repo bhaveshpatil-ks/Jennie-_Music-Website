@@ -10,9 +10,14 @@ import {
   ListMusic, 
   Maximize2, 
   ShieldCheck, 
-  Video,
   Mic2,
-  ListPlus
+  ListPlus,
+  Flag,
+  Headphones,
+  Speaker,
+  Laptop,
+  Check,
+  X,
 } from 'lucide-react';
 import { usePlayerStore } from '../../store/usePlayerStore';
 import { useLibraryStore } from '../../store/useLibraryStore';
@@ -25,6 +30,7 @@ import { getTrackCoverUrl } from '../../data/mockTracks';
 
 export const PlayerBar = () => {
   const openArtist = useLibraryStore((state) => state.openArtist);
+  const openFeedbackModal = useLibraryStore((state) => state.openFeedbackModal);
   const currentTrack = usePlayerStore((state) => state.currentTrack);
   const isPlaying = usePlayerStore((state) => state.isPlaying);
   const togglePlay = usePlayerStore((state) => state.togglePlay);
@@ -37,8 +43,6 @@ export const PlayerBar = () => {
   const isQueueOpen = usePlayerStore((state) => state.isQueueOpen);
   const toggleQueue = usePlayerStore((state) => state.toggleQueue);
   const toggleFullscreen = usePlayerStore((state) => state.toggleFullscreen);
-  const isVideoMode = usePlayerStore((state) => state.isVideoMode);
-  const toggleVideoMode = usePlayerStore((state) => state.toggleVideoMode);
   const currentTime = usePlayerStore((state) => state.currentTime);
   const duration = usePlayerStore((state) => state.duration);
   const isLyricsOpen = usePlayerStore((state) => state.isLyricsOpen);
@@ -46,6 +50,8 @@ export const PlayerBar = () => {
   const setLyricsOpen = usePlayerStore((state) => state.setLyricsOpen);
   const toastMessage = usePlayerStore((state) => state.toastMessage);
   const [isPlaylistModalOpen, setIsPlaylistModalOpen] = useState(false);
+  const [showDevicePicker, setShowDevicePicker] = useState(false);
+  const [selectedDeviceId, setSelectedDeviceId] = useState('speaker');
 
   if (!currentTrack) return null;
   const isYouTubeTrack = currentTrack.source === 'youtube' || Boolean(currentTrack.youtubeId);
@@ -75,11 +81,6 @@ export const PlayerBar = () => {
                 alt={`Artwork for ${currentTrack.title}`}
                 className="w-full h-full object-cover"
               />
-              {isYouTubeTrack && (
-                <div className="absolute top-1 left-1 p-0.5 rounded bg-black/70">
-                  <Video size={10} className="text-red-500" />
-                </div>
-              )}
             </div>
 
             <div className="min-w-0 flex-grow pr-1">
@@ -105,21 +106,18 @@ export const PlayerBar = () => {
             </div>
           </div>
 
-          {/* Quick Actions: Video toggle, Like, Play/Pause */}
+          {/* Quick Actions: Output Device (Sketch 3), Playlist, Like, Play/Pause */}
           <div className="flex items-center gap-1 flex-shrink-0">
-            {isYouTubeTrack && (
-              <button
-                type="button"
-                onClick={toggleVideoMode}
-                aria-label={isVideoMode ? "Close video mode" : "Watch music video"}
-                className={`p-2 rounded-full transition-colors ${
-                  isVideoMode ? 'text-red-500 bg-red-500/10' : 'text-neutral-300 hover:text-white'
-                }`}
-                title="Toggle Video Player"
-              >
-                <Video size={17} />
-              </button>
-            )}
+            {/* Output Device selector from Sketch 3 */}
+            <button
+              type="button"
+              onClick={() => setShowDevicePicker(true)}
+              aria-label="Audio Output Device"
+              title="Listening Device"
+              className="p-1.5 rounded-full text-neutral-400 hover:text-emerald-400 transition-colors"
+            >
+              <Headphones size={17} className={selectedDeviceId === 'headphones' ? 'text-emerald-400' : 'text-neutral-400'} />
+            </button>
 
             <div className="flex items-center gap-0.5">
               <button
@@ -307,23 +305,26 @@ export const PlayerBar = () => {
 
           {/* Right: Auxiliary Controls (Queue, Volume, Video, Fullscreen) */}
           <div className="flex items-center justify-end gap-2.5 w-[30%] max-w-[280px]">
-            {/* Video Mode Toggle (Active for YouTube tracks) */}
-            {isYouTubeTrack && (
-              <button
-                type="button"
-                onClick={toggleVideoMode}
-                aria-label={isVideoMode ? 'Hide Music Video' : 'Watch Music Video'}
-                className={`p-2 rounded-full transition-all flex items-center gap-1 text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
-                  isVideoMode
-                    ? 'bg-red-500/20 text-red-400 border border-red-500/30'
-                    : 'text-neutral-300 hover:text-white hover:bg-white/10'
-                }`}
-                title={isVideoMode ? 'Hide Music Video' : 'Watch Music Video'}
-              >
-                <Video size={17} />
-                <span className="hidden xl:inline text-[11px]">{isVideoMode ? 'Video ON' : 'Video'}</span>
-              </button>
-            )}
+
+            {/* Report Playback Issue Button */}
+            <button
+              type="button"
+              onClick={() => {
+                openFeedbackModal({
+                  category: 'playback',
+                  songId: currentTrack.id,
+                  artist: currentTrack.artist,
+                  trackTitle: currentTrack.title,
+                  playbackPosition: `${Math.floor(currentTime / 60)}:${('0' + Math.floor(currentTime % 60)).slice(-2)}`,
+                });
+              }}
+              aria-label="Report playback issue"
+              className="p-2 rounded-full text-neutral-400 hover:text-red-400 hover:bg-red-500/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+              title="Report Playback Issue"
+            >
+              <Flag size={15} />
+            </button>
+
 
             {/* Lyrics View Toggle Button */}
             <button
@@ -364,6 +365,19 @@ export const PlayerBar = () => {
               <Maximize2 size={17} />
             </button>
 
+            {/* Output Device Selector (Sketch 3) */}
+            <button
+              type="button"
+              onClick={() => setShowDevicePicker(true)}
+              aria-label="Audio output devices"
+              className={`p-2 rounded-full hover:bg-white/10 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white ${
+                showDevicePicker ? 'text-emerald-400 bg-white/10' : 'text-neutral-300 hover:text-white'
+              }`}
+              title="Select Output Device"
+            >
+              <Headphones size={17} />
+            </button>
+
             {/* Volume Control */}
             <div className="hidden lg:block">
               <VolumeControl />
@@ -385,6 +399,75 @@ export const PlayerBar = () => {
         isOpen={isLyricsOpen}
         onClose={() => setLyricsOpen(false)}
       />
+
+      {/* Audio Output Device Modal (Sketch 3) */}
+      {showDevicePicker && (
+        <div 
+          className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-end md:items-center justify-center p-4 animate-fadeIn"
+          onClick={() => setShowDevicePicker(false)}
+        >
+          <div 
+            className="w-full max-w-sm bg-[#141416] border border-white/10 rounded-3xl p-5 shadow-2xl relative animate-slideUp text-white"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between pb-3 border-b border-white/10">
+              <div className="flex items-center gap-2">
+                <Speaker size={18} className="text-emerald-400" />
+                <h3 className="text-sm font-bold">Connect to a Device</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowDevicePicker(false)}
+                className="w-7 h-7 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center text-neutral-400 hover:text-white"
+                aria-label="Close device picker"
+              >
+                <X size={15} />
+              </button>
+            </div>
+
+            <p className="text-[11px] text-neutral-400 mt-2 mb-3">
+              Currently playing in lossless high-definition audio (320 kbps).
+            </p>
+
+            <div className="space-y-2">
+              {[
+                { id: 'speaker', name: 'This Device (Windows PC Speakers)', icon: Laptop, status: 'Default Audio' },
+                { id: 'headphones', name: 'Bluetooth Headphones / Earphones', icon: Headphones, status: 'Paired' },
+                { id: 'hifi', name: 'External USB DAC / Hi-Fi Output', icon: Speaker, status: 'Ready' },
+              ].map((device) => {
+                const DevIcon = device.icon;
+                const isSelected = selectedDeviceId === device.id;
+                return (
+                  <button
+                    key={device.id}
+                    type="button"
+                    onClick={() => {
+                      setSelectedDeviceId(device.id);
+                      setShowDevicePicker(false);
+                    }}
+                    className={`w-full flex items-center justify-between p-3 rounded-2xl border transition-all text-left ${
+                      isSelected 
+                        ? 'bg-emerald-500/10 border-emerald-500/40 text-white' 
+                        : 'bg-white/[0.03] border-white/5 text-neutral-300 hover:bg-white/[0.06]'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${isSelected ? 'bg-emerald-500/20 text-emerald-400' : 'bg-white/5 text-neutral-400'}`}>
+                        <DevIcon size={16} />
+                      </div>
+                      <div>
+                        <p className={`text-xs font-semibold ${isSelected ? 'text-emerald-400' : 'text-white'}`}>{device.name}</p>
+                        <p className="text-[10px] text-neutral-400">{device.status}</p>
+                      </div>
+                    </div>
+                    {isSelected && <Check size={16} className="text-emerald-400" />}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Live Toast Feedback (e.g. Added to Queue) */}
       {toastMessage && (
