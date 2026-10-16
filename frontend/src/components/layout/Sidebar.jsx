@@ -10,7 +10,8 @@ import {
   Music,
   Scale,
   FileText,
-  Building2
+  Building2,
+  HelpCircle
 } from 'lucide-react';
 import { useLibraryStore } from '../../store/useLibraryStore';
 import { useAuthStore } from '../../store/useAuthStore';
@@ -34,6 +35,11 @@ export const Sidebar = ({ onOpenCreatePlaylist }) => {
       label: 'Liked Songs', 
       icon: Heart, 
       badge: likedTrackIds.length > 0 ? likedTrackIds.length : null 
+    },
+    { 
+      id: 'feedback', 
+      label: 'Help & Complaints', 
+      icon: HelpCircle 
     },
   ];
 
