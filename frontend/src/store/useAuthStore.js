@@ -103,11 +103,21 @@ export const useAuthStore = create((set, get) => ({
    */
   initAuth: () => {
     set({ loading: true });
+
+    // Safety timeout: Never let auth loading state hang for more than 1.5s
+    const safetyTimer = setTimeout(() => {
+      if (get().loading) {
+        set({ loading: false });
+      }
+    }, 1500);
+
     if (!auth) {
+      clearTimeout(safetyTimer);
       set({ loading: false });
       return () => {};
     }
     return onAuthStateChanged(auth, async (firebaseUser) => {
+      clearTimeout(safetyTimer);
       if (firebaseUser) {
         set({
           user: firebaseUser,
