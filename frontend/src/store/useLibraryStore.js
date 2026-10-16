@@ -13,12 +13,19 @@ import {
 // Load initial liked from localStorage (clean without demo entries)
 const getInitialLikes = () => {
   try {
-    const saved = localStorage.getItem('jennie_liked_tracks') || localStorage.getItem('lora_liked_tracks') || localStorage.getItem('aura_liked_tracks');
+    const saved =
+      localStorage.getItem('jennie_liked_tracks') ||
+      localStorage.getItem('lora_liked_tracks') ||
+      localStorage.getItem('aura_liked_tracks');
     if (saved) {
       const parsed = JSON.parse(saved);
       if (Array.isArray(parsed)) {
         // Strip out legacy demo placeholder IDs
-        return parsed.filter((id) => !String(id).startsWith('track-') && !['track-1', 'track-5', 'track-9', 'track-12', 'track-18'].includes(id));
+        return parsed.filter(
+          (id) =>
+            !String(id).startsWith('track-') &&
+            !['track-1', 'track-5', 'track-9', 'track-12', 'track-18'].includes(id)
+        );
       }
     }
   } catch (e) {}
@@ -40,7 +47,9 @@ const getInitialLikedTrackObjects = () => {
 
 const getInitialPlaylists = () => {
   try {
-    const saved = localStorage.getItem('jennie_custom_playlists') || localStorage.getItem('lora_custom_playlists');
+    const saved =
+      localStorage.getItem('jennie_custom_playlists') ||
+      localStorage.getItem('lora_custom_playlists');
     if (saved) {
       const parsed = JSON.parse(saved);
       if (Array.isArray(parsed)) {
@@ -54,9 +63,16 @@ const getInitialPlaylists = () => {
 
 export const useLibraryStore = create((set, get) => ({
   // Navigation
-  activeView: 'home', // 'home' | 'search' | 'library' | 'favorites' | 'genre' | 'playlist'
+  activeView: 'home', // 'home' | 'search' | 'library' | 'favorites' | 'genre' | 'playlist' | 'feedback'
   selectedItem: null, // Holds genre object or playlist object when on detail pages
-  
+
+  // Feedback Modal Global State
+  isFeedbackModalOpen: false,
+  feedbackInitialContext: null,
+  openFeedbackModal: (context = null) =>
+    set({ isFeedbackModalOpen: true, feedbackInitialContext: context }),
+  closeFeedbackModal: () => set({ isFeedbackModalOpen: false, feedbackInitialContext: null }),
+
   // Search
   searchQuery: '',
   searchFilter: 'all', // 'all' | 'songs' | 'artists' | 'genres'
@@ -102,11 +118,17 @@ export const useLibraryStore = create((set, get) => ({
       const remoteFavorites = await fetchFavoritesApi();
       if (Array.isArray(remoteFavorites) && remoteFavorites.length > 0) {
         const ids = remoteFavorites.map((f) => String(f.trackId || f.track?.id)).filter(Boolean);
-        const fullTracks = remoteFavorites.map((f) => {
-          const t = f.track || {};
-          const ytId = t.youtubeId || (typeof t.id === 'string' && t.id.startsWith('yt-') ? t.id.replace('yt-', '') : undefined);
-          return { ...t, youtubeId: ytId };
-        }).filter((t) => t.id);
+        const fullTracks = remoteFavorites
+          .map((f) => {
+            const t = f.track || {};
+            const ytId =
+              t.youtubeId ||
+              (typeof t.id === 'string' && t.id.startsWith('yt-')
+                ? t.id.replace('yt-', '')
+                : undefined);
+            return { ...t, youtubeId: ytId };
+          })
+          .filter((t) => t.id);
 
         set({ likedTrackIds: ids, likedTracks: fullTracks });
         try {
@@ -136,9 +158,15 @@ export const useLibraryStore = create((set, get) => ({
 
   // Open Artist Profile
   openArtist: (artistOrName, additionalTracks = []) => {
-    const profile = (typeof artistOrName === 'object' && artistOrName?.topTracks)
-      ? artistOrName
-      : getArtistProfile(typeof artistOrName === 'object' ? (artistOrName?.name || artistOrName?.artist) : artistOrName, additionalTracks);
+    const profile =
+      typeof artistOrName === 'object' && artistOrName?.topTracks
+        ? artistOrName
+        : getArtistProfile(
+            typeof artistOrName === 'object'
+              ? artistOrName?.name || artistOrName?.artist
+              : artistOrName,
+            additionalTracks
+          );
     set({ activeView: 'artist', selectedItem: profile });
     const mainEl = document.getElementById('main-content');
     if (mainEl) mainEl.scrollTo({ top: 0, behavior: 'smooth' });
@@ -146,9 +174,13 @@ export const useLibraryStore = create((set, get) => ({
 
   // Open Album Page
   openAlbum: (albumOrTitle, artistName = '') => {
-    const album = (typeof albumOrTitle === 'object' && albumOrTitle?.tracks)
-      ? albumOrTitle
-      : getAlbumData(typeof albumOrTitle === 'object' ? albumOrTitle?.title : albumOrTitle, artistName);
+    const album =
+      typeof albumOrTitle === 'object' && albumOrTitle?.tracks
+        ? albumOrTitle
+        : getAlbumData(
+            typeof albumOrTitle === 'object' ? albumOrTitle?.title : albumOrTitle,
+            artistName
+          );
     set({ activeView: 'album', selectedItem: album });
     const mainEl = document.getElementById('main-content');
     if (mainEl) mainEl.scrollTo({ top: 0, behavior: 'smooth' });
@@ -201,12 +233,17 @@ export const useLibraryStore = create((set, get) => ({
       updatedTracks = likedTracks.filter((t) => String(t.id) !== strId);
     } else {
       updatedIds = [...likedTrackIds, strId];
-      const targetTrack = trackObject || MOCK_TRACKS.find((t) => t.id === strId) || { id: strId, title: 'Saved Track' };
-      const ytId = targetTrack.youtubeId || (typeof targetTrack.id === 'string' && targetTrack.id.startsWith('yt-') ? targetTrack.id.replace('yt-', '') : undefined);
+      const targetTrack = trackObject ||
+        MOCK_TRACKS.find((t) => t.id === strId) || { id: strId, title: 'Saved Track' };
+      const ytId =
+        targetTrack.youtubeId ||
+        (typeof targetTrack.id === 'string' && targetTrack.id.startsWith('yt-')
+          ? targetTrack.id.replace('yt-', '')
+          : undefined);
       const enrichedTrack = {
         ...targetTrack,
         youtubeId: ytId,
-        source: ytId ? 'youtube' : (targetTrack.source || 'jamendo'),
+        source: ytId ? 'youtube' : targetTrack.source || 'jamendo',
       };
       updatedTracks = [enrichedTrack, ...likedTracks.filter((t) => String(t.id) !== strId)];
     }
@@ -232,11 +269,15 @@ export const useLibraryStore = create((set, get) => ({
     // 1. Add locally saved full objects with enriched youtubeId
     likedTracks.forEach((t) => {
       if (t && t.id) {
-        const ytId = t.youtubeId || (typeof t.id === 'string' && t.id.startsWith('yt-') ? t.id.replace('yt-', '') : undefined);
+        const ytId =
+          t.youtubeId ||
+          (typeof t.id === 'string' && t.id.startsWith('yt-')
+            ? t.id.replace('yt-', '')
+            : undefined);
         map.set(String(t.id), {
           ...t,
           youtubeId: ytId,
-          source: ytId ? 'youtube' : (t.source || 'jamendo'),
+          source: ytId ? 'youtube' : t.source || 'jamendo',
         });
       }
     });
@@ -299,7 +340,7 @@ export const useLibraryStore = create((set, get) => ({
       const updated = state.customPlaylists.map((p) => {
         if (p.id === playlistId && !p.trackIds.includes(trackId)) {
           const newTrackIds = [...p.trackIds, trackId];
-          const newTracks = trackObject ? [...(p.tracks || []), trackObject] : (p.tracks || []);
+          const newTracks = trackObject ? [...(p.tracks || []), trackObject] : p.tracks || [];
           return { ...p, trackIds: newTrackIds, tracks: newTracks };
         }
         return p;

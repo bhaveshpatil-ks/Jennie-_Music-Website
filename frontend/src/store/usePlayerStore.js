@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { MOCK_TRACKS, getTrackCoverUrl } from '../data/mockTracks';
 import { shuffleArray } from '../utils/formatters';
 import { decideNextSong, buildRecommendedQueue } from '../services/recommendationEngine';
+import { markTrackUnplayable, isTrackUnplayable } from '../services/unplayableTracksRegistry';
 
 // Singleton HTML5 Audio instance for real audio streaming (Jamendo & Audius)
 let globalAudio = null;
@@ -108,13 +109,21 @@ export const usePlayerStore = create((set, get) => {
         const ytDuration = state.ytController?.getDuration?.();
         set({
           currentTime: Math.floor(ytTime),
-          duration: typeof ytDuration === 'number' && ytDuration > 0 ? Math.floor(ytDuration) : state.duration,
+          duration:
+            typeof ytDuration === 'number' && ytDuration > 0
+              ? Math.floor(ytDuration)
+              : state.duration,
         });
         return;
       }
 
       // Priority 2: If HTML5 Audio is actively playing and has a valid currentTime, use it
-      if (globalAudio && !globalAudio.paused && !isNaN(globalAudio.currentTime) && globalAudio.currentTime > 0) {
+      if (
+        globalAudio &&
+        !globalAudio.paused &&
+        !isNaN(globalAudio.currentTime) &&
+        globalAudio.currentTime > 0
+      ) {
         set({
           currentTime: Math.floor(globalAudio.currentTime),
           duration: Math.floor(globalAudio.duration) || state.duration,
@@ -255,13 +264,27 @@ export const usePlayerStore = create((set, get) => {
       let targetIndex = currentQueue.findIndex((t) => t.id === track.id);
       let updatedQueue = currentQueue;
 
-      // Extract youtubeId reliably from youtubeId property or yt- ID prefix
-      const youtubeId = track.youtubeId || (typeof track.id === 'string' && track.id.startsWith('yt-') ? track.id.replace('yt-', '') : null);
+      // Extract clean 11-char youtubeId reliably
+      const rawYt =
+        track.youtubeId ||
+        (typeof track.id === 'string' && track.id.startsWith('yt-') ? track.id : null) ||
+        (track.source === 'youtube' ? track.id : '');
+      let youtubeId = null;
+      if (typeof rawYt === 'string' && rawYt.trim()) {
+        const withoutPrefix = rawYt.trim().startsWith('yt-')
+          ? rawYt.trim().replace('yt-', '')
+          : rawYt.trim();
+        const match = withoutPrefix.match(
+          /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))?([\w-]{11})/
+        );
+        youtubeId =
+          match && match[1] ? match[1] : /^[\w-]{11}$/.test(withoutPrefix) ? withoutPrefix : null;
+      }
       const isYouTube = track.source === 'youtube' || Boolean(youtubeId);
       const normalizedTrack = {
         ...track,
         youtubeId: youtubeId || track.youtubeId,
-        source: isYouTube ? 'youtube' : (track.source || 'jamendo'),
+        source: isYouTube ? 'youtube' : track.source || 'jamendo',
         coverUrl: getTrackCoverUrl(track),
       };
 
@@ -274,15 +297,21 @@ export const usePlayerStore = create((set, get) => {
 
       // If user plays a standalone track or empty queue, generate cohesive YouTube Mix queue from structured profile
       if (targetIndex === -1 || !newQueue || newQueue.length <= 1) {
-        const recommended = buildRecommendedQueue(normalizedTrack, 10, {
-          history: get().history,
-          consecutiveSkips: get().consecutiveSkips,
-          sessionArtistPenalties: get().sessionArtistPenalties,
-        }, candidatePool).map((r) => ({
+        const recommended = buildRecommendedQueue(
+          normalizedTrack,
+          10,
+          {
+            history: get().history,
+            consecutiveSkips: get().consecutiveSkips,
+            sessionArtistPenalties: get().sessionArtistPenalties,
+          },
+          candidatePool
+        ).map((r) => ({
           ...r,
           recommendationReason: r.reason || r.recommendationReason,
           recommendationConfidence: r.score || r.recommendationConfidence,
-          recommendationCategory: r.recommendationCategory || (r.source_pool === 'A' ? 'same_artist' : 'related_artist'),
+          recommendationCategory:
+            r.recommendationCategory || (r.source_pool === 'A' ? 'same_artist' : 'related_artist'),
         }));
         updatedQueue = [normalizedTrack, ...recommended.filter((r) => r.id !== normalizedTrack.id)];
         targetIndex = 0;
@@ -292,11 +321,15 @@ export const usePlayerStore = create((set, get) => {
       const history = prevTrack ? [prevTrack, ...get().history.slice(0, 29)] : get().history;
 
       // Evaluate single next-song decision
-      const nextDecision = decideNextSong(normalizedTrack, {
-        history,
-        consecutiveSkips: get().consecutiveSkips,
-        sessionArtistPenalties: get().sessionArtistPenalties,
-      }, candidatePool);
+      const nextDecision = decideNextSong(
+        normalizedTrack,
+        {
+          history,
+          consecutiveSkips: get().consecutiveSkips,
+          sessionArtistPenalties: get().sessionArtistPenalties,
+        },
+        candidatePool
+      );
 
       set({
         currentTrack: normalizedTrack,
@@ -378,7 +411,11 @@ export const usePlayerStore = create((set, get) => {
       } else {
         if (isYouTube) {
           startSilentCarrier();
-          const ytId = currentTrack.youtubeId || (typeof currentTrack.id === 'string' && currentTrack.id.startsWith('yt-') ? currentTrack.id.replace('yt-', '') : null);
+          const ytId =
+            currentTrack.youtubeId ||
+            (typeof currentTrack.id === 'string' && currentTrack.id.startsWith('yt-')
+              ? currentTrack.id.replace('yt-', '')
+              : null);
           if (ytController?.play) {
             if (!get().isMuted) {
               ytController.unMute();
@@ -433,7 +470,7 @@ export const usePlayerStore = create((set, get) => {
       syncMediaSession(currentTrack, true);
     },
 
-    nextTrack: (isExplicitSkip = false) => {
+    nextTrack: (isExplicitSkip = false, options = {}) => {
       const {
         queue,
         currentIndex,
@@ -443,10 +480,12 @@ export const usePlayerStore = create((set, get) => {
         currentTrack,
         history,
         sessionArtistPenalties,
-        sessionPoolSkips
+        sessionPoolSkips,
       } = get();
 
       if (!currentTrack && queue.length === 0) return;
+
+      const isErrorSkip = Boolean(options && options.isErrorSkip);
 
       let nextIndex = currentIndex + 1;
       let newPenalties = { ...sessionArtistPenalties };
@@ -454,20 +493,23 @@ export const usePlayerStore = create((set, get) => {
 
       // Live Adaptation (Step 5):
       // Skip under 5 seconds: strong negative -> drop artist weight by 60% and regenerate rest of queue
-      const isQuickSkip = (currentTime > 0 && currentTime < 5) || (isExplicitSkip && currentTime < 5);
+      // BUT if this is an automated embed/copyright error skip, NEVER penalize the artist or category!
+      const isQuickSkip =
+        !isErrorSkip &&
+        ((currentTime > 0 && currentTime < 5) || (isExplicitSkip && currentTime < 5));
       if (isQuickSkip && currentTrack) {
         const artistKey = currentTrack.artist_id || currentTrack.artist?.toLowerCase();
         if (artistKey) {
-          newPenalties[artistKey] = Math.min(0.90, (newPenalties[artistKey] || 0) + 0.60);
+          newPenalties[artistKey] = Math.min(0.9, (newPenalties[artistKey] || 0) + 0.6);
         }
         if (currentTrack.source_pool) {
           newPoolSkips.push(currentTrack.source_pool);
         }
-      } else if (currentTime >= 30 && currentTrack) {
+      } else if (currentTime >= 30 && currentTrack && !isErrorSkip) {
         // Full listen or > 30 seconds: boost artist weight by 30%
         const artistKey = currentTrack.artist_id || currentTrack.artist?.toLowerCase();
         if (artistKey) {
-          newPenalties[artistKey] = Math.max(-0.50, (newPenalties[artistKey] || 0) - 0.30);
+          newPenalties[artistKey] = Math.max(-0.5, (newPenalties[artistKey] || 0) - 0.3);
         }
         newPoolSkips = [];
       }
@@ -477,20 +519,33 @@ export const usePlayerStore = create((set, get) => {
       // If quick skip (< 5s), regenerate the upcoming queue to immediately enforce the 60% drop
       if (isQuickSkip && nextIndex < activeQueue.length) {
         const nextSeed = activeQueue[nextIndex] || currentTrack;
-        const freshUpcoming = buildRecommendedQueue(nextSeed, 8, {
-          history: [currentTrack, ...history],
-          sessionArtistPenalties: newPenalties,
-        }, MOCK_TRACKS);
-        activeQueue = [...activeQueue.slice(0, nextIndex + 1), ...freshUpcoming.filter((r) => r.id !== nextSeed.id)];
+        const freshUpcoming = buildRecommendedQueue(
+          nextSeed,
+          8,
+          {
+            history: [currentTrack, ...history],
+            sessionArtistPenalties: newPenalties,
+          },
+          MOCK_TRACKS
+        );
+        activeQueue = [
+          ...activeQueue.slice(0, nextIndex + 1),
+          ...freshUpcoming.filter((r) => r.id !== nextSeed.id),
+        ];
       }
 
       // Background autoplay refill: When 3 tracks remain in queue, append fresh recommendations
       if (activeQueue.length - nextIndex <= 3) {
         const tailSeed = activeQueue[activeQueue.length - 1] || currentTrack;
-        const tailExtension = buildRecommendedQueue(tailSeed, 8, {
-          history: [currentTrack, ...history],
-          sessionArtistPenalties: newPenalties,
-        }, MOCK_TRACKS);
+        const tailExtension = buildRecommendedQueue(
+          tailSeed,
+          8,
+          {
+            history: [currentTrack, ...history],
+            sessionArtistPenalties: newPenalties,
+          },
+          MOCK_TRACKS
+        );
         const existingIds = new Set(activeQueue.map((t) => t.id || t.youtubeId));
         const newToAdd = tailExtension.filter((t) => !existingIds.has(t.id || t.youtubeId));
         activeQueue = [...activeQueue, ...newToAdd];
@@ -508,10 +563,15 @@ export const usePlayerStore = create((set, get) => {
           nextIndex = 0;
         } else {
           // Infinite cohesive radio autoplay
-          const nextRecs = buildRecommendedQueue(currentTrack, 6, {
-            history: [currentTrack, ...history],
-            sessionArtistPenalties: newPenalties,
-          }, MOCK_TRACKS);
+          const nextRecs = buildRecommendedQueue(
+            currentTrack,
+            6,
+            {
+              history: [currentTrack, ...history],
+              sessionArtistPenalties: newPenalties,
+            },
+            MOCK_TRACKS
+          );
           if (nextRecs.length > 0) {
             get().playTrack(nextRecs[0], nextRecs);
             return;
@@ -524,10 +584,24 @@ export const usePlayerStore = create((set, get) => {
         }
       }
 
+      // Skip over any upcoming songs marked unplayable by YouTube embed restrictions
+      while (
+        nextIndex < activeQueue.length &&
+        isTrackUnplayable(activeQueue[nextIndex]?.id || activeQueue[nextIndex]?.youtubeId)
+      ) {
+        nextIndex++;
+      }
+
       const nextSong = activeQueue[nextIndex];
       if (nextSong) {
         get().playTrack(nextSong, activeQueue);
       }
+    },
+
+    markTrackUnplayable: (trackId, errorCode, reason) => {
+      markTrackUnplayable(trackId, errorCode, reason);
+      const cleanQueue = get().queue.filter((t) => !isTrackUnplayable(t.id || t.youtubeId));
+      set({ queue: cleanQueue });
     },
 
     prevTrack: () => {
@@ -617,7 +691,9 @@ export const usePlayerStore = create((set, get) => {
         });
       } else {
         const remaining = queue.filter((t) => t.id !== currentTrack?.id);
-        const shuffled = currentTrack ? [currentTrack, ...shuffleArray(remaining)] : shuffleArray(queue);
+        const shuffled = currentTrack
+          ? [currentTrack, ...shuffleArray(remaining)]
+          : shuffleArray(queue);
         set({
           isShuffled: true,
           queue: shuffled,
