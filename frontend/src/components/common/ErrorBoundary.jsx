@@ -15,7 +15,15 @@ export class ErrorBoundary extends React.Component {
   }
 
   handleReload = () => {
-    window.location.reload();
+    try {
+      this.setState({ hasError: false, error: null });
+      if (typeof window !== 'undefined') {
+        window.location.hash = '';
+        window.location.reload();
+      }
+    } catch (_) {
+      window.location.reload();
+    }
   };
 
   render() {
@@ -28,9 +36,15 @@ export class ErrorBoundary extends React.Component {
             </svg>
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold font-serif mb-2">Something went wrong</h1>
-          <p className="text-neutral-400 text-sm max-w-md mb-6 leading-relaxed">
+          <p className="text-neutral-400 text-sm max-w-md mb-4 leading-relaxed">
             The application encountered an unexpected issue while loading. Please try refreshing the page.
           </p>
+          {this.state.error && (
+            <div className="max-w-xl w-full p-3 mb-6 rounded-xl bg-red-950/30 border border-red-500/20 text-left font-mono text-xs text-red-300 overflow-x-auto select-text">
+              <span className="font-semibold text-red-200">{this.state.error.name}: </span>
+              <span>{this.state.error.message}</span>
+            </div>
+          )}
           <button
             onClick={this.handleReload}
             className="px-6 py-2.5 rounded-full bg-white text-black font-semibold text-sm hover:bg-neutral-200 transition-colors cursor-pointer shadow-lg active:scale-95"
