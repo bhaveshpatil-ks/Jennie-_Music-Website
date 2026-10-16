@@ -5,13 +5,35 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --sat: env(safe-area-inset-top, 0px);
+    --sab: env(safe-area-inset-bottom, 0px);
+    --sal: env(safe-area-inset-left, 0px);
+    --sar: env(safe-area-inset-right, 0px);
+  }
+
   body {
     background-color: #080808;
     color: #F3F4F6;
     font-family: 'Inter', 'Manrope', system-ui, -apple-system, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+    overscroll-behavior-y: none;
   }
+
+  input, textarea {
+    user-select: auto;
+  }
+}
+
+.safe-top {
+  padding-top: max(env(safe-area-inset-top, 0px), 0px);
+}
+
+.safe-bottom {
+  padding-bottom: max(env(safe-area-inset-bottom, 0px), 0px);
 }
 
 /* Custom Minimalist Luxury Scrollbars */
