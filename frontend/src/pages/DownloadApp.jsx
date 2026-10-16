@@ -16,9 +16,13 @@ export const DownloadApp = () => {
   const [copiedLink, setCopiedLink] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
 
-  const ANDROID_APK_URL = 'https://github.com/bhaveshpatil-ks/JENNIE_WEB-APP/releases/latest/download/Jennie-Music.apk';
+  const ANDROID_DIRECT_URL = '/downloads/Jennie-Music.apk';
+  const ANDROID_FALLBACK_URL = 'https://github.com/bhaveshpatil-ks/JENNIE_WEB-APP/releases/download/v1.0.37/Jennie-Music.apk';
+  const WINDOWS_SHORTCUT_URL = '/downloads/Jennie-Music-Windows.url';
   const RELEASES_PAGE_URL = 'https://github.com/bhaveshpatil-ks/JENNIE_WEB-APP/releases';
-  const WINDOWS_SETUP_URL = 'https://github.com/bhaveshpatil-ks/JENNIE_WEB-APP/releases';
+
+  const [downloadingAndroid, setDownloadingAndroid] = useState(false);
+  const [downloadingWindows, setDownloadingWindows] = useState(false);
 
   useEffect(() => {
     const handleBeforeInstall = (e) => {
@@ -29,21 +33,52 @@ export const DownloadApp = () => {
     return () => window.removeEventListener('beforeinstallprompt', handleBeforeInstall);
   }, []);
 
-  const handleInstallPwa = async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      const choice = await deferredPrompt.userChoice;
-      if (choice?.outcome === 'accepted') {
-        setDeferredPrompt(null);
-      }
-    } else {
-      window.open(WINDOWS_SETUP_URL, '_blank', 'noopener,noreferrer');
+  const handleDownloadAndroid = (e) => {
+    if (e) e.preventDefault();
+    setDownloadingAndroid(true);
+    try {
+      const link = document.createElement('a');
+      link.href = ANDROID_DIRECT_URL;
+      link.download = 'Jennie-Music.apk';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (_) {
+      window.location.href = ANDROID_DIRECT_URL;
     }
+    setTimeout(() => setDownloadingAndroid(false), 2500);
+  };
+
+  const handleDownloadWindows = async (e) => {
+    if (e) e.preventDefault();
+    if (deferredPrompt) {
+      try {
+        deferredPrompt.prompt();
+        const choice = await deferredPrompt.userChoice;
+        if (choice?.outcome === 'accepted') {
+          setDeferredPrompt(null);
+        }
+      } catch (_) {}
+      return;
+    }
+    setDownloadingWindows(true);
+    try {
+      const link = document.createElement('a');
+      link.href = WINDOWS_SHORTCUT_URL;
+      link.download = 'Jennie-Music.url';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (_) {
+      window.location.href = WINDOWS_SHORTCUT_URL;
+    }
+    setTimeout(() => setDownloadingWindows(false), 2500);
   };
 
   const handleCopyAndroidLink = () => {
     try {
-      navigator.clipboard.writeText(ANDROID_APK_URL);
+      const urlToCopy = window.location.origin + ANDROID_DIRECT_URL;
+      navigator.clipboard.writeText(urlToCopy);
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 2000);
     } catch (_) {}
@@ -125,16 +160,23 @@ export const DownloadApp = () => {
             </div>
 
             <div className="space-y-2 pt-4 border-t border-white/[0.06]">
-              <a
-                href={ANDROID_APK_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                download="Jennie-Music.apk"
+              <button
+                type="button"
+                onClick={handleDownloadAndroid}
                 className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-white hover:bg-neutral-200 active:scale-[0.99] text-black font-semibold text-xs tracking-tight transition-all cursor-pointer"
               >
-                <Download size={15} />
-                <span>Download APK</span>
-              </a>
+                {downloadingAndroid ? (
+                  <>
+                    <Check size={15} className="text-black" />
+                    <span>Downloading Jennie-Music.apk...</span>
+                  </>
+                ) : (
+                  <>
+                    <Download size={15} />
+                    <span>Download APK (Direct)</span>
+                  </>
+                )}
+              </button>
 
               <div className="flex items-center gap-2">
                 <button
@@ -145,7 +187,7 @@ export const DownloadApp = () => {
                   {copiedLink ? (
                     <>
                       <Check size={13} className="text-white" />
-                      <span>Copied</span>
+                      <span>Copied Link</span>
                     </>
                   ) : (
                     <>
@@ -156,13 +198,12 @@ export const DownloadApp = () => {
                 </button>
 
                 <a
-                  href={RELEASES_PAGE_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href={ANDROID_FALLBACK_URL}
+                  download="Jennie-Music.apk"
                   className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-neutral-300 hover:text-white text-xs font-medium border border-white/[0.06] transition-colors"
                 >
                   <ExternalLink size={13} />
-                  <span>Releases</span>
+                  <span>Mirror Link</span>
                 </a>
               </div>
             </div>
@@ -206,26 +247,28 @@ export const DownloadApp = () => {
             </div>
 
             <div className="space-y-2 pt-4 border-t border-white/[0.06]">
-              {deferredPrompt ? (
-                <button
-                  type="button"
-                  onClick={handleInstallPwa}
-                  className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-white hover:bg-neutral-200 active:scale-[0.99] text-black font-semibold text-xs tracking-tight transition-all cursor-pointer"
-                >
-                  <Download size={15} />
-                  <span>Install on Windows</span>
-                </button>
-              ) : (
-                <a
-                  href={WINDOWS_SETUP_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-white hover:bg-neutral-200 active:scale-[0.99] text-black font-semibold text-xs tracking-tight transition-all cursor-pointer"
-                >
-                  <Download size={15} />
-                  <span>Get for Windows</span>
-                </a>
-              )}
+              <button
+                type="button"
+                onClick={handleDownloadWindows}
+                className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-white hover:bg-neutral-200 active:scale-[0.99] text-black font-semibold text-xs tracking-tight transition-all cursor-pointer"
+              >
+                {deferredPrompt ? (
+                  <>
+                    <Download size={15} />
+                    <span>Install Desktop App</span>
+                  </>
+                ) : downloadingWindows ? (
+                  <>
+                    <Check size={15} className="text-black" />
+                    <span>Downloading Jennie Desktop...</span>
+                  </>
+                ) : (
+                  <>
+                    <Download size={15} />
+                    <span>Download for Windows</span>
+                  </>
+                )}
+              </button>
 
               <button
                 type="button"
