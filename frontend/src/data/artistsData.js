@@ -22,8 +22,8 @@ export const ARTISTS_DATA = [
     monthlyListeners: '38,920,410',
     followers: '42,100,000',
     bio: 'Arijit Singh is India’s foremost playback icon, widely considered one of the most versatile and celebrated vocalists of modern Hindi cinema. With a record number of Filmfare Awards and global chart-toppers, his voice defines romantic and soulful Bollywood melodies.',
-    avatarUrl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80',
-    bannerUrl: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1600&q=80',
+    avatarUrl: '',
+    bannerUrl: '',
     headerColor: '#A16207',
     genres: ['Bollywood Romantic', 'Soulful', 'Acoustic', 'Sufi'],
     topTrackIds: [
@@ -116,18 +116,18 @@ export const ARTISTS_DATA = [
     monthlyListeners: '14,350,190',
     followers: '8,420,000',
     bio: 'Karan Aujla (Geetan Di Machine) is an internationally acclaimed Punjabi singer, rapper, and lyricist from Ghurala, Punjab. Known for his witty penmanship, hard-hitting 808 beats, and global hits like Tauba Tauba and 52 Bars.',
-    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80',
-    bannerUrl: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1600&q=80',
+    avatarUrl: '',
+    bannerUrl: '',
     headerColor: '#DC2626',
     genres: ['Punjabi Pop', 'Hip-Hop', 'UK Drill', 'Bhangra'],
     topTrackIds: [
       'yt-LK7-_dgAVQE', // Tauba Tauba
       'yt-4DfVxVeqk2o', // 52 Bars
-      'yt-0pWsCiBvLOk', // Softly
-      'yt-pXRviuL6vMY', // Winning Speech
-      'yt-mH_LFkWxpI0', // White Brown Black
-      'yt-4tywp83zkmk', // Antidote
-      'yt-F5S6ALIxyik'  // Admirin' You
+      'yt-cWMxCE2HTag', // Softly
+      'yt-vsWxs1tuwDk', // Winning Speech
+      'yt-k85UB5b6pJU', // Admirin' You
+      'yt-Pd1yGW_g2T8', // Ashke
+      'yt-XTp5jaRU3Ws'  // Wavy
     ],
     albums: [
       {
@@ -135,8 +135,8 @@ export const ARTISTS_DATA = [
         title: 'Making Memories',
         type: 'Album',
         releaseYear: 2023,
-        coverUrl: 'https://i.ytimg.com/vi/0pWsCiBvLOk/hqdefault.jpg',
-        trackIds: ['yt-0pWsCiBvLOk', 'yt-F5S6ALIxyik', 'yt-4tywp83zkmk'],
+        coverUrl: 'https://i.ytimg.com/vi/cWMxCE2HTag/hqdefault.jpg',
+        trackIds: ['yt-cWMxCE2HTag', 'yt-k85UB5b6pJU', 'yt-Pd1yGW_g2T8'],
         totalTracks: 9,
         genre: 'Punjabi Pop'
       },
@@ -145,8 +145,8 @@ export const ARTISTS_DATA = [
         title: 'Street Dreams (with Divine)',
         type: 'Album',
         releaseYear: 2024,
-        coverUrl: 'https://i.ytimg.com/vi/pXRviuL6vMY/hqdefault.jpg',
-        trackIds: ['yt-pXRviuL6vMY'],
+        coverUrl: 'https://i.ytimg.com/vi/vsWxs1tuwDk/hqdefault.jpg',
+        trackIds: ['yt-vsWxs1tuwDk', 'yt-XTp5jaRU3Ws'],
         totalTracks: 7,
         genre: 'Desi Hip-Hop'
       },
@@ -156,7 +156,7 @@ export const ARTISTS_DATA = [
         type: 'EP',
         releaseYear: 2023,
         coverUrl: 'https://i.ytimg.com/vi/4DfVxVeqk2o/hqdefault.jpg',
-        trackIds: ['yt-4DfVxVeqk2o'],
+        trackIds: ['yt-4DfVxVeqk2o', 'yt-3j7bhOvW6jw'],
         totalTracks: 4,
         genre: 'Punjabi Drill'
       }
@@ -167,8 +167,8 @@ export const ARTISTS_DATA = [
         title: 'Tauba Tauba (Bad Newz)',
         type: 'Single',
         releaseYear: 2024,
-        coverUrl: 'https://i.ytimg.com/vi/LK7-_dgAVQE/hqdefault.jpg',
-        trackIds: ['yt-LK7-_dgAVQE'],
+        coverUrl: 'https://i.ytimg.com/vi/n_FCrCQ6-9U/hqdefault.jpg',
+        trackIds: ['yt-n_FCrCQ6-9U'],
         totalTracks: 1,
         genre: 'Punjabi Pop / Dance'
       },
@@ -177,8 +177,8 @@ export const ARTISTS_DATA = [
         title: 'Winning Speech',
         type: 'Single',
         releaseYear: 2024,
-        coverUrl: 'https://i.ytimg.com/vi/pXRviuL6vMY/hqdefault.jpg',
-        trackIds: ['yt-pXRviuL6vMY'],
+        coverUrl: 'https://i.ytimg.com/vi/vsWxs1tuwDk/hqdefault.jpg',
+        trackIds: ['yt-vsWxs1tuwDk'],
         totalTracks: 1,
         genre: 'Desi Hip-Hop'
       }
@@ -197,8 +197,8 @@ export const ARTISTS_DATA = [
     monthlyListeners: '18,890,320',
     followers: '15,600,000',
     bio: 'Diljit Dosanjh is a global superstar, singer, actor, and live entertainer. The first Punjabi artist to perform at Coachella, Diljit blends traditional Punjabi folk with futuristic synth-pop, R&B, and dance beats.',
-    avatarUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=600&q=80',
-    bannerUrl: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1600&q=80',
+    avatarUrl: '',
+    bannerUrl: '',
     headerColor: '#7C3AED',
     genres: ['Punjabi Pop', 'Urban Folk', 'Bhangra', 'Dance'],
     topTrackIds: [
@@ -265,8 +265,8 @@ export const ARTISTS_DATA = [
     monthlyListeners: '9,740,210',
     followers: '6,200,000',
     bio: 'Amritpal Singh Dhillon, known professionally as AP Dhillon, is an Indo-Canadian singer, songwriter, and record producer who redefined brown diaspora music with seamless blends of synthwave, trap, R&B, and Punjabi hooks.',
-    avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80',
-    bannerUrl: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1600&q=80',
+    avatarUrl: '',
+    bannerUrl: '',
     headerColor: '#2563EB',
     genres: ['Punjabi Synthwave', 'R&B', 'Trap', 'Indie'],
     topTrackIds: [
@@ -322,11 +322,11 @@ export const ARTISTS_DATA = [
     monthlyListeners: '12,890,000',
     followers: '16,400,000',
     bio: 'Shubhdeep Singh Sidhu, known globally as Sidhu Moose Wala, was an iconic Punjabi singer, rapper, and songwriter whose bold lyricism and powerful anthems conquered charts worldwide.',
-    avatarUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=600&q=80',
-    bannerUrl: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1600&q=80',
+    avatarUrl: '',
+    bannerUrl: '',
     headerColor: '#B91C1C',
     genres: ['Punjabi Rap', 'Desi Hip-Hop', 'Folk Rap', 'Gangsta Rap'],
-    topTrackIds: ['yt-LK7-_dgAVQE', 'yt-4DfVxVeqk2o'],
+    topTrackIds: ['yt-n_FCrCQ6-9U', 'yt-6xoB4ZiKKn0', 'yt-GgmFC83T24Y', 'yt-ZgG-2XG_r34'],
     albums: [
       {
         id: 'album-moosetape',
@@ -354,8 +354,8 @@ export const ARTISTS_DATA = [
     monthlyListeners: '114,820,950',
     followers: '88,000,000',
     bio: 'Abel Makkonen Tesfaye, known professionally as The Weeknd, is a Canadian singer, songwriter, and record producer known for his sonic versatility, dark lyricism, and cinematic 80s synth-pop aesthetics.',
-    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80',
-    bannerUrl: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1600&q=80',
+    avatarUrl: '',
+    bannerUrl: '',
     headerColor: '#E11D48',
     genres: ['R&B', 'Synth-Pop', 'Alternative Pop', 'Electronic'],
     topTrackIds: [
@@ -398,8 +398,8 @@ export const ARTISTS_DATA = [
     monthlyListeners: '16,210,000',
     followers: '5,800,000',
     bio: 'Vishal Mishra is an Indian music composer and singer known for intensely emotional romantic ballads, soaring vocals, and chart-topping soundtracks for films like ANIMAL and Kabir Singh.',
-    avatarUrl: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=600&q=80',
-    bannerUrl: 'https://images.unsplash.com/photo-1465847899084-d164df4dedc6?auto=format&fit=crop&w=1600&q=80',
+    avatarUrl: '',
+    bannerUrl: '',
     headerColor: '#059669',
     genres: ['Bollywood Romantic', 'Sufi', 'Acoustic'],
     topTrackIds: [
@@ -442,8 +442,8 @@ export const ARTISTS_DATA = [
     monthlyListeners: '8,420,000',
     followers: '4,100,000',
     bio: 'Shubneet Singh, popularly known as Shubh, is an Indian rapper and singer-songwriter based in Canada. Known for his viral hits No Love, Elevated, Cheques, and Baller.',
-    avatarUrl: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=600&q=80',
-    bannerUrl: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1600&q=80',
+    avatarUrl: '',
+    bannerUrl: '',
     headerColor: '#D97706',
     genres: ['Desi Hip-Hop', 'Trap', 'Punjabi Rap'],
     topTrackIds: [
@@ -475,8 +475,8 @@ export const ARTISTS_DATA = [
     monthlyListeners: '29,480,000',
     followers: '19,200,000',
     bio: 'Pritam Chakraborty is India’s legendary music composer and record producer who has composed iconic soundtracks for over 125 Bollywood films, spanning romantic anthems, rock ballads, and dance hits.',
-    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80',
-    bannerUrl: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1600&q=80',
+    avatarUrl: '',
+    bannerUrl: '',
     headerColor: '#4F46E5',
     genres: ['Bollywood', 'Romantic', 'Pop Rock', 'Sufi'],
     topTrackIds: [
@@ -509,12 +509,12 @@ export const ARTISTS_DATA = [
     monthlyListeners: '25,600,000',
     followers: '28,100,000',
     bio: 'Shreya Ghoshal is a legendary Indian singer renowned for her melodic range, classical perfection, and countless cinematic masterpieces in Hindi, Bengali, Tamil, and Telugu cinema.',
-    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80',
-    bannerUrl: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1600&q=80',
+    avatarUrl: '',
+    bannerUrl: '',
     headerColor: '#EC4899',
     genres: ['Bollywood Classical', 'Romantic', 'Playback'],
-    topTrackIds: ['yt-sK7riqg2mr4', 'yt-BddP6PYo2gs'],
-    albums: [],
+    topTrackIds: ['yt-3A-xVp-sW_4', 'yt-zRtPUIumXcY', 'yt-pp8vbcOCm8k', 'yt-Vn_Vhycfhrc', 'yt-K3b2wcfP_u0', 'yt-nfNc0XJdZ98'],
+    albums: [{ id: 'album-aashiqui-2', title: 'Aashiqui 2 (Original Soundtrack)', type: 'Album', releaseYear: 2013, coverUrl: 'https://i.ytimg.com/vi/3A-xVp-sW_4/hqdefault.jpg', trackIds: ['yt-3A-xVp-sW_4'], totalTracks: 11, genre: 'Bollywood Romantic' }, { id: 'album-bajirao', title: 'Bajirao Mastani', type: 'Album', releaseYear: 2015, coverUrl: 'https://i.ytimg.com/vi/zRtPUIumXcY/hqdefault.jpg', trackIds: ['yt-zRtPUIumXcY'], totalTracks: 10, genre: 'Classical Fusion' }],
     singles: [],
     relatedArtistIds: ['arijit_singh', 'pritam', 'alka_yagnik']
   },
@@ -527,12 +527,12 @@ export const ARTISTS_DATA = [
     monthlyListeners: '17,400,000',
     followers: '14,200,000',
     bio: 'Badshah is an Indian rapper, singer, and music producer known for club anthems, Desi pop bangers, and chartbuster collaborations.',
-    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80',
-    bannerUrl: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1600&q=80',
+    avatarUrl: '',
+    bannerUrl: '',
     headerColor: '#F59E0B',
     genres: ['Desi Hip-Hop', 'Commercial Pop', 'Club'],
-    topTrackIds: ['yt-LK7-_dgAVQE'],
-    albums: [],
+    topTrackIds: ['yt-Dmm_s6O_t7o', 'yt-SD4Z8dlZPd8', 'yt-GfO-3P_L2Fw'],
+    albums: [{ id: 'album-jugnu', title: 'Jugnu', type: 'Single', releaseYear: 2021, coverUrl: 'https://i.ytimg.com/vi/Dmm_s6O_t7o/hqdefault.jpg', trackIds: ['yt-Dmm_s6O_t7o'], totalTracks: 1, genre: 'Pop' }],
     singles: [],
     relatedArtistIds: ['karan_aujla', 'diljit_dosanjh']
   },
@@ -545,12 +545,12 @@ export const ARTISTS_DATA = [
     monthlyListeners: '21,300,000',
     followers: '18,500,000',
     bio: 'Jubin Nautiyal is an Indian playback singer and performer known for his acoustic touch, soul-stirring love songs, and blockbuster film soundtracks.',
-    avatarUrl: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=600&q=80',
-    bannerUrl: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1600&q=80',
+    avatarUrl: '',
+    bannerUrl: '',
     headerColor: '#10B981',
     genres: ['Bollywood Romantic', 'Acoustic', 'Sufi'],
-    topTrackIds: ['yt-RLzC55ai0eo'],
-    albums: [],
+    topTrackIds: ['yt-sCbbMZ-q4-I', 'yt-tLqtnGLfm4Q', 'yt-gvyUuxdRdR4'],
+    albums: [{ id: 'album-lut-gaye', title: 'Lut Gaye', type: 'Single', releaseYear: 2021, coverUrl: 'https://i.ytimg.com/vi/sCbbMZ-q4-I/hqdefault.jpg', trackIds: ['yt-sCbbMZ-q4-I'], totalTracks: 1, genre: 'Romantic' }],
     singles: [],
     relatedArtistIds: ['arijit_singh', 'vishal_mishra']
   },
@@ -563,12 +563,12 @@ export const ARTISTS_DATA = [
     monthlyListeners: '23,100,000',
     followers: '25,000,000',
     bio: 'Atif Aslam is an iconic South Asian singer and songwriter renowned for his soaring vocal range, emotive rock ballads, and evergreen Bollywood classics.',
-    avatarUrl: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=600&q=80',
-    bannerUrl: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1600&q=80',
+    avatarUrl: '',
+    bannerUrl: '',
     headerColor: '#6366F1',
     genres: ['Sufi Rock', 'Bollywood Romantic', 'Pop'],
-    topTrackIds: ['yt-BddP6PYo2gs', 'yt-RLzC55ai0eo'],
-    albums: [],
+    topTrackIds: ['yt-a18py61_F_w', 'yt-SAcpESN_Fk4', 'yt-Il4wSflh4a4', 'yt-V7LwfY5U5WI', 'yt-P8PWN1OmZOA', 'yt-BadBAMnpXSc'],
+    albums: [{ id: 'album-coke-studio-8', title: 'Coke Studio Season 8', type: 'Album', releaseYear: 2015, coverUrl: 'https://i.ytimg.com/vi/a18py61_F_w/hqdefault.jpg', trackIds: ['yt-a18py61_F_w'], totalTracks: 7, genre: 'Sufi' }, { id: 'album-tiger-zinda-hai', title: 'Tiger Zinda Hai', type: 'Album', releaseYear: 2017, coverUrl: 'https://i.ytimg.com/vi/SAcpESN_Fk4/hqdefault.jpg', trackIds: ['yt-SAcpESN_Fk4'], totalTracks: 6, genre: 'Bollywood' }],
     singles: [],
     relatedArtistIds: ['arijit_singh', 'pritam', 'jubin_nautiyal']
   }
@@ -588,8 +588,8 @@ export const ARTISTS_DATA = [
     "monthlyListeners": "34,200,000",
     "followers": "28,500,000",
     "bio": "Allah Rakha Rahman is an Indian music director, composer, and music producer known for integrating Indian classical music with electronic music, world music, and traditional orchestral arrangements. Recipient of 2 Academy Awards, 2 Grammy Awards, and a BAFTA.",
-    "avatarUrl": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80",
-    "bannerUrl": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1600&q=80",
+    "avatarUrl": "",
+    "bannerUrl": "",
     "headerColor": "#047857",
     "genres": [
       "World Music",
@@ -598,8 +598,9 @@ export const ARTISTS_DATA = [
       "Classical Fusion"
     ],
     "topTrackIds": [
-      "yt-BddP6PYo2gs",
-      "yt-RLzC55ai0eo"
+      "yt-T94PHkuydcw",
+      "yt-PQmrmVs10X8",
+      "yt-nfNc0XJdZ98"
     ],
     "albums": [
       {
@@ -607,9 +608,9 @@ export const ARTISTS_DATA = [
         "title": "Rockstar (Original Motion Picture Soundtrack)",
         "type": "Album",
         "releaseYear": 2011,
-        "coverUrl": "https://i.ytimg.com/vi/BddP6PYo2gs/hqdefault.jpg",
+        "coverUrl": "https://i.ytimg.com/vi/T94PHkuydcw/hqdefault.jpg",
         "trackIds": [
-          "yt-BddP6PYo2gs"
+          "yt-T94PHkuydcw"
         ],
         "totalTracks": 14,
         "genre": "Sufi Rock"
@@ -636,8 +637,8 @@ export const ARTISTS_DATA = [
     "monthlyListeners": "22,400,000",
     "followers": "35,000,000",
     "bio": "Neha Kakkar is an Indian playback singer known for high-energy Bollywood dance party tracks, romantic pop singles, and television appearances.",
-    "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80",
-    "bannerUrl": "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1600&q=80",
+    "avatarUrl": "",
+    "bannerUrl": "",
     "headerColor": "#DB2777",
     "genres": [
       "Bollywood Dance",
@@ -668,8 +669,8 @@ export const ARTISTS_DATA = [
     "monthlyListeners": "15,800,000",
     "followers": "12,900,000",
     "bio": "Darshan Raval is an Indian singer, composer, and lyricist renowned for monsoon romantic anthems and indie pop chartbusters.",
-    "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80",
-    "bannerUrl": "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1600&q=80",
+    "avatarUrl": "",
+    "bannerUrl": "",
     "headerColor": "#4338CA",
     "genres": [
       "Indie Pop",
@@ -700,8 +701,8 @@ export const ARTISTS_DATA = [
     "monthlyListeners": "21,100,000",
     "followers": "19,500,000",
     "bio": "Sonu Nigam is a legendary Indian playback singer and live performer who has sung thousands of songs across dozens of languages over three decades.",
-    "avatarUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=600&q=80",
-    "bannerUrl": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1600&q=80",
+    "avatarUrl": "",
+    "bannerUrl": "",
     "headerColor": "#B45309",
     "genres": [
       "Bollywood Classic",
@@ -736,8 +737,8 @@ export const ARTISTS_DATA = [
     "monthlyListeners": "16,900,000",
     "followers": "21,000,000",
     "bio": "Hirdesh Singh, known professionally as Yo Yo Honey Singh, is an Indian music producer, rapper, singer, and songwriter who revolutionized Desi hip-hop and commercial rap in mainstream Indian cinema.",
-    "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80",
-    "bannerUrl": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1600&q=80",
+    "avatarUrl": "",
+    "bannerUrl": "",
     "headerColor": "#D97706",
     "genres": [
       "Desi Hip-Hop",
@@ -784,8 +785,8 @@ export const ARTISTS_DATA = [
     "monthlyListeners": "19,200,000",
     "followers": "14,000,000",
     "bio": "B Praak is an Indian singer and music composer who rose to national fame with heart-wrenching emotional ballads like Teri Mitti, Filhall, and Mann Bharrya.",
-    "avatarUrl": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=600&q=80",
-    "bannerUrl": "https://images.unsplash.com/photo-1465847899084-d164df4dedc6?auto=format&fit=crop&w=1600&q=80",
+    "avatarUrl": "",
+    "bannerUrl": "",
     "headerColor": "#9333EA",
     "genres": [
       "Punjabi Soul",
@@ -816,8 +817,8 @@ export const ARTISTS_DATA = [
     "monthlyListeners": "14,500,000",
     "followers": "8,200,000",
     "bio": "Jasleen Kaur Royal is an Indian singer, songwriter, and composer who sings in Punjabi, Hindi, and English. Known for chartbusters like Heeriye, Din Shagna Da, and Ranjha.",
-    "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80",
-    "bannerUrl": "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1600&q=80",
+    "avatarUrl": "",
+    "bannerUrl": "",
     "headerColor": "#EC4899",
     "genres": [
       "Indie Folk",
@@ -849,8 +850,8 @@ export const ARTISTS_DATA = [
     "monthlyListeners": "20,800,000",
     "followers": "9,500,000",
     "bio": "Sachin-Jigar is an Indian music composer duo consisting of Sachin Sanghvi and Jigar Saraiya. Known for Bhediya (Apna Bana Le), Stree 2, Badlapur, and ABCD.",
-    "avatarUrl": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80",
-    "bannerUrl": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1600&q=80",
+    "avatarUrl": "",
+    "bannerUrl": "",
     "headerColor": "#10B981",
     "genres": [
       "Bollywood Pop",
@@ -881,8 +882,8 @@ export const ARTISTS_DATA = [
     "monthlyListeners": "23,400,000",
     "followers": "21,000,000",
     "bio": "Anirudh Ravichander is an Indian music composer and singer known for explosive, high-energy soundtracks across Tamil, Telugu, and Hindi cinema (Jawan, Jailer, Leo, Vikram).",
-    "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80",
-    "bannerUrl": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1600&q=80",
+    "avatarUrl": "",
+    "bannerUrl": "",
     "headerColor": "#EA580C",
     "genres": [
       "High-Energy Pop",
@@ -926,8 +927,8 @@ export const ARTISTS_DATA = [
     "monthlyListeners": "24,000,000",
     "followers": "22,000,000",
     "bio": "Alka Yagnik is an iconic Indian playback singer with a career spanning over four decades and thousands of unforgettable Hindi cinema melodies.",
-    "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80",
-    "bannerUrl": "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1600&q=80",
+    "avatarUrl": "",
+    "bannerUrl": "",
     "headerColor": "#F43F5E",
     "genres": [
       "Bollywood Classic",
@@ -959,8 +960,8 @@ export const ARTISTS_DATA = [
     "monthlyListeners": "18,500,000",
     "followers": "17,000,000",
     "bio": "Kumar Sanu is a legendary Indian playback singer who holds the Guinness World Record for recording 28 songs in a single day and defined the sound of 90s Bollywood romance.",
-    "avatarUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=600&q=80",
-    "bannerUrl": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1600&q=80",
+    "avatarUrl": "",
+    "bannerUrl": "",
     "headerColor": "#D97706",
     "genres": [
       "90s Bollywood",
@@ -990,8 +991,8 @@ export const ARTISTS_DATA = [
     "monthlyListeners": "19,800,000",
     "followers": "18,000,000",
     "bio": "Krishnakumar Kunnath, popularly known as KK, was one of India’s most beloved vocalists whose raw, heartfelt voice defined the youth anthems of a generation.",
-    "avatarUrl": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80",
-    "bannerUrl": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=1600&q=80",
+    "avatarUrl": "",
+    "bannerUrl": "",
     "headerColor": "#4F46E5",
     "genres": [
       "Indie Rock",
@@ -1023,8 +1024,8 @@ export const ARTISTS_DATA = [
     "monthlyListeners": "7,900,000",
     "followers": "6,400,000",
     "bio": "Vivian Fernandes, known as DIVINE, is the pioneer of the Mumbai Gully Rap movement that brought Indian street hip-hop into the international spotlight.",
-    "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80",
-    "bannerUrl": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1600&q=80",
+    "avatarUrl": "",
+    "bannerUrl": "",
     "headerColor": "#1E293B",
     "genres": [
       "Desi Hip-Hop",
@@ -1040,9 +1041,10 @@ export const ARTISTS_DATA = [
         "title": "Street Dreams (with Karan Aujla)",
         "type": "Album",
         "releaseYear": 2024,
-        "coverUrl": "https://i.ytimg.com/vi/pXRviuL6vMY/hqdefault.jpg",
+        "coverUrl": "https://i.ytimg.com/vi/vsWxs1tuwDk/hqdefault.jpg",
         "trackIds": [
-          "yt-pXRviuL6vMY"
+          "yt-vsWxs1tuwDk",
+          "yt-XTp5jaRU3Ws"
         ],
         "totalTracks": 7,
         "genre": "Desi Hip-Hop"
@@ -1070,8 +1072,8 @@ export const ARTISTS_DATA = [
     "monthlyListeners": "6,200,000",
     "followers": "8,900,000",
     "bio": "Emiway Bantai is an independent Indian rapper, songwriter, and founder of Bantai Records, known for explosive flow and record-breaking viral numbers.",
-    "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80",
-    "bannerUrl": "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1600&q=80",
+    "avatarUrl": "",
+    "bannerUrl": "",
     "headerColor": "#F59E0B",
     "genres": [
       "Desi Hip-Hop",
@@ -1103,8 +1105,8 @@ export const ARTISTS_DATA = [
     "monthlyListeners": "5,800,000",
     "followers": "11,200,000",
     "bio": "Altaf Tadavi, known professionally as MC Stan, is an Indian rapper and music producer from Pune, Maharashtra known for pioneering modern new-school trap music in India.",
-    "avatarUrl": "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=600&q=80",
-    "bannerUrl": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1600&q=80",
+    "avatarUrl": "",
+    "bannerUrl": "",
     "headerColor": "#6B7280",
     "genres": [
       "New School Trap",
@@ -1135,8 +1137,8 @@ export const ARTISTS_DATA = [
     "monthlyListeners": "14,100,000",
     "followers": "9,800,000",
     "bio": "Arpan Kumar Chandel, known by his stage name King, is an Indian rapper, singer, and songwriter known for global cross-over hits like Maan Meri Jaan.",
-    "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80",
-    "bannerUrl": "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1600&q=80",
+    "avatarUrl": "",
+    "bannerUrl": "",
     "headerColor": "#10B981",
     "genres": [
       "Pop Rap",
@@ -1169,8 +1171,8 @@ export const ARTISTS_DATA = [
     "monthlyListeners": "3,800,000",
     "followers": "2,400,000",
     "bio": "Seedhe Maut is a New Delhi-based hip-hop duo consisting of Siddhant Sharma (Calm) and Abhijay Negi (Encore ABJ), celebrated as pioneers of modern DHH lyricism.",
-    "avatarUrl": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80",
-    "bannerUrl": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1600&q=80",
+    "avatarUrl": "",
+    "bannerUrl": "",
     "headerColor": "#DC2626",
     "genres": [
       "Delhi Underground Rap",
@@ -1201,8 +1203,8 @@ export const ARTISTS_DATA = [
     "monthlyListeners": "108,000,000",
     "followers": "115,000,000",
     "bio": "Taylor Alison Swift is an American singer-songwriter whose narrative songwriting and cultural impact have earned her four Album of the Year Grammy Awards.",
-    "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80",
-    "bannerUrl": "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1600&q=80",
+    "avatarUrl": "",
+    "bannerUrl": "",
     "headerColor": "#D97706",
     "genres": [
       "Pop",
@@ -1232,8 +1234,8 @@ export const ARTISTS_DATA = [
     "monthlyListeners": "89,500,000",
     "followers": "78,000,000",
     "bio": "Justin Drew Bieber is a Canadian singer recognized for multi-genre musicianship and global chart dominance across pop, R&B, and electronic music.",
-    "avatarUrl": "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=600&q=80",
-    "bannerUrl": "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1600&q=80",
+    "avatarUrl": "",
+    "bannerUrl": "",
     "headerColor": "#2563EB",
     "genres": [
       "Pop",
@@ -1264,8 +1266,8 @@ export const ARTISTS_DATA = [
     "monthlyListeners": "88,900,000",
     "followers": "85,000,000",
     "bio": "Aubrey Drake Graham is a Canadian rapper, singer, and songwriter credited with popularizing R&B sensibilities in hip-hop.",
-    "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80",
-    "bannerUrl": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1600&q=80",
+    "avatarUrl": "",
+    "bannerUrl": "",
     "headerColor": "#1E293B",
     "genres": [
       "Hip-Hop",
@@ -1295,8 +1297,8 @@ export const ARTISTS_DATA = [
     "monthlyListeners": "124,000,000",
     "followers": "56,000,000",
     "bio": "Peter Gene Hernandez, known professionally as Bruno Mars, is an American singer, songwriter, and record producer renowned for his retro showmanship and stage energy.",
-    "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80",
-    "bannerUrl": "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=1600&q=80",
+    "avatarUrl": "",
+    "bannerUrl": "",
     "headerColor": "#D97706",
     "genres": [
       "Funk",
@@ -1326,8 +1328,8 @@ export const ARTISTS_DATA = [
     "monthlyListeners": "106,000,000",
     "followers": "92,000,000",
     "bio": "Billie Eilish Pirate Baird O’Connell is an American singer-songwriter who first gained public attention with her debut single Ocean Eyes and has won nine Grammy Awards and two Oscars.",
-    "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80",
-    "bannerUrl": "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1600&q=80",
+    "avatarUrl": "",
+    "bannerUrl": "",
     "headerColor": "#059669",
     "genres": [
       "Alternative Pop",
@@ -1356,8 +1358,8 @@ export const ARTISTS_DATA = [
     "monthlyListeners": "74,000,000",
     "followers": "48,000,000",
     "bio": "Dua Lipa is an English and Albanian singer and songwriter known for her signature mezzo-soprano vocal range and modern disco-pop bangers.",
-    "avatarUrl": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=600&q=80",
-    "bannerUrl": "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1600&q=80",
+    "avatarUrl": "",
+    "bannerUrl": "",
     "headerColor": "#7C3AED",
     "genres": [
       "Nu-Disco",
@@ -1456,6 +1458,9 @@ export const getArtistProfile = (artistIdOrName, additionalTracks = []) => {
 
   const artistTracks = combinedTracks.filter((t) => {
     if (!t || !t.artist) return false;
+    if (found && (t.artist_id === found.id || (t.featured_artist_ids && t.featured_artist_ids.includes(found.id)))) {
+      return true;
+    }
     const tArtist = t.artist.toLowerCase();
     const searchTarget = found ? found.name.toLowerCase() : lower;
     return (
@@ -1506,7 +1511,7 @@ export const getArtistProfile = (artistIdOrName, additionalTracks = []) => {
 
     return {
       ...found,
-      topTracks: finalTopTracks.length > 0 ? finalTopTracks : MOCK_TRACKS.slice(0, 5),
+      topTracks: finalTopTracks,
       albums: resolvedAlbums,
       relatedArtists: relatedArtists.length > 0 ? relatedArtists : ARTISTS_DATA.filter((a) => a.id !== found.id).slice(0, 4)
     };
