@@ -1,33 +1,31 @@
 import React, { useState } from 'react';
 import {
   User,
-  Mail,
-  Lock,
-  Shield,
   ShieldCheck,
   Check,
-  Save,
-  RefreshCw,
   Sliders,
-  Volume2,
-  Radio,
-  Wifi,
   Trash2,
   LogOut,
   Database,
   Sparkles,
   ChevronRight,
+  ChevronLeft,
+  Search,
+  Bell,
+  FileText,
+  Code2,
+  HeartHandshake,
+  BookOpen,
   Info,
-  ExternalLink,
   AlertTriangle,
   CheckCircle2,
   X,
-  Calendar,
-  Layers,
+  HelpCircle,
 } from 'lucide-react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useSettingsStore } from '../../store/useSettingsStore';
 import { useLibraryStore } from '../../store/useLibraryStore';
+import { PermissionSettingsSection } from './PermissionSettingsSection';
 
 export function SpotifySettings({ onClose, onOpenCookieSettings }) {
   const {
@@ -38,40 +36,38 @@ export function SpotifySettings({ onClose, onOpenCookieSettings }) {
     deleteAccountPermanently,
     authActionLoading,
     error,
-    successMessage,
     clearAuthNotice,
   } = useAuthStore();
 
   const {
     audioQuality,
     setAudioQuality,
-    dataSaver,
-    toggleDataSaver,
     autoplay,
     toggleAutoplay,
     crossfade,
     setCrossfade,
     normalizeVolume,
     toggleNormalizeVolume,
-    automix,
-    toggleAutomix,
     monoAudio,
     toggleMonoAudio,
-    privateSession,
-    togglePrivateSession,
-    listeningActivity,
-    toggleListeningActivity,
     cacheSize,
     clearAppCache,
   } = useSettingsStore();
 
   const setActiveView = useLibraryStore((state) => state.setActiveView);
 
+  // Search filter for settings (Sketch 2 & 4: "search for settings")
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Notifications state (Sketch 2 & 4)
+  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  const [playbackNotifications, setPlaybackNotifications] = useState(true);
+
   // Profile editable fields
   const [isEditingProfile, setIsEditingProfile] = useState(false);
-  const [editUsername, setEditUsername] = useState(profile?.username || user?.displayName || '');
-  const [editGender, setEditGender] = useState(profile?.gender || 'prefer-not-to-say');
-  const [editDob, setEditDob] = useState(profile?.dateOfBirth || '2000-01-01');
+  const [editUsername, setEditUsername] = useState(
+    profile?.username || user?.displayName || 'Bhavesh Patil'
+  );
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [cacheClearedNotice, setCacheClearedNotice] = useState(false);
 
@@ -79,7 +75,17 @@ export function SpotifySettings({ onClose, onOpenCookieSettings }) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [confirmCheckbox, setConfirmCheckbox] = useState(false);
 
-  const todayStr = new Date().toISOString().split('T')[0];
+  // About & Support Modals (Sketch 2 & 4)
+  const [showSupportModal, setShowSupportModal] = useState(false);
+  const [showRulesModal, setShowRulesModal] = useState(false);
+  const [showAppDetailsModal, setShowAppDetailsModal] = useState(false);
+  const [showDevDetailsModal, setShowDevDetailsModal] = useState(false);
+
+  const matches = (keywords) => {
+    if (!searchQuery.trim()) return true;
+    const q = searchQuery.toLowerCase().trim();
+    return keywords.toLowerCase().includes(q);
+  };
 
   const handleSaveProfile = async (e) => {
     e?.preventDefault();
@@ -87,8 +93,6 @@ export function SpotifySettings({ onClose, onOpenCookieSettings }) {
 
     const ok = await updateProfileDetails({
       username: editUsername.trim(),
-      gender: editGender,
-      dateOfBirth: editDob,
     });
 
     if (ok) {
@@ -113,21 +117,42 @@ export function SpotifySettings({ onClose, onOpenCookieSettings }) {
     }
   };
 
+  const currentUsername = profile?.username || user?.displayName || 'Bhavesh Patil';
+
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-8 pb-16 text-neutral-200">
+    <div className="w-full max-w-4xl mx-auto space-y-6 pb-20 text-neutral-200">
       {/* ────────────────────────────────────────────────────────────
-          PAGE HEADER
+          PAGE HEADER WITH BACK ARROW (Sketch 2 & 4)
          ──────────────────────────────────────────────────────────── */}
-      <div className="flex items-center justify-between border-b border-white/10 pb-5">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight flex items-center gap-2.5">
-            <Sliders className="w-6 h-6 text-zinc-300" />
-            <span>Settings</span>
-          </h1>
-          <p className="text-xs sm:text-sm text-neutral-400 mt-1">
-            Audio fidelity, account identity, playback behavior, and DPDP Act privacy controls
-          </p>
+      <div className="flex items-center justify-between border-b border-white/10 pb-4">
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={() => {
+              if (onClose) onClose();
+              else {
+                try {
+                  if (window.history.length > 1) window.history.back();
+                  else setActiveView('home');
+                } catch (_) {
+                  setActiveView('home');
+                }
+              }
+            }}
+            className="w-9 h-9 rounded-full bg-white/5 hover:bg-white/15 flex items-center justify-center text-white transition-colors"
+            aria-label="Back"
+            title="Go Back"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight">Settings</h1>
+            <p className="text-xs text-neutral-400 mt-0.5 hidden sm:block">
+              Manage account, notifications, audio quality, and support
+            </p>
+          </div>
         </div>
+
         {onClose && (
           <button
             onClick={onClose}
@@ -139,11 +164,34 @@ export function SpotifySettings({ onClose, onOpenCookieSettings }) {
         )}
       </div>
 
-      {/* Global Alerts / Toasts */}
+      {/* ────────────────────────────────────────────────────────────
+          SEARCH BAR (Sketch 2 & 4: "search for settings")
+         ──────────────────────────────────────────────────────────── */}
+      <div className="relative">
+        <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400 pointer-events-none" />
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="search for settings"
+          className="w-full pl-10 pr-10 py-2.5 rounded-2xl bg-[#161618] border border-white/10 text-white placeholder:text-neutral-500 text-sm focus:outline-none focus:border-white/30 transition-colors shadow-inner"
+        />
+        {searchQuery && (
+          <button
+            type="button"
+            onClick={() => setSearchQuery('')}
+            className="absolute right-3.5 top-1/2 -translate-y-1/2 text-xs text-neutral-400 hover:text-white"
+          >
+            Clear
+          </button>
+        )}
+      </div>
+
+      {/* Alerts */}
       {saveSuccess && (
         <div className="p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs flex items-center gap-2 animate-luxury-fade">
           <CheckCircle2 className="w-4 h-4 shrink-0" />
-          <span>Profile preferences saved successfully.</span>
+          <span>Username updated successfully.</span>
         </div>
       )}
 
@@ -162,580 +210,690 @@ export function SpotifySettings({ onClose, onOpenCookieSettings }) {
       )}
 
       {/* ────────────────────────────────────────────────────────────
-          SECTION 1: PROFILE & ACCOUNT (Spotify Header Card)
+          CATEGORY 1: ACCOUNT (Sketch 2 & 4: username, close account)
          ──────────────────────────────────────────────────────────── */}
-      <section className="space-y-4">
-        <h2 className="text-xs font-semibold text-neutral-400 uppercase tracking-wider px-1">
-          Account &amp; Identity
-        </h2>
-
-        <div className="p-5 sm:p-6 rounded-2xl bg-zinc-900/70 border border-zinc-800 backdrop-blur-md space-y-5">
-          {/* User Profile Bar */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-full bg-gradient-to-tr from-zinc-700 via-zinc-800 to-zinc-900 border border-zinc-700 text-zinc-100 font-bold text-xl flex items-center justify-center shrink-0 shadow-lg shadow-black/40">
-                {(profile?.username || user?.displayName || user?.email || 'U').charAt(0).toUpperCase()}
-              </div>
-              <div className="min-w-0">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-lg font-bold text-white truncate">
-                    {profile?.username || user?.displayName || 'User'}
-                  </h3>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-300 border border-zinc-700 font-mono">
-                    {profile?.age_bracket || '18+'}
-                  </span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">
-                    Free Hi-Fi
-                  </span>
+      {matches('account username close user name profile') && (
+        <section className="space-y-3">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-neutral-400 px-1">
+            Account
+          </h2>
+          <div className="p-4 sm:p-5 rounded-2xl bg-zinc-900/70 border border-zinc-800 backdrop-blur-md space-y-4">
+            {/* Username Row */}
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-emerald-600 via-teal-600 to-cyan-700 text-white font-bold flex items-center justify-center text-sm shadow">
+                  {(currentUsername.charAt(0) || 'B').toUpperCase()}
                 </div>
-                <p className="text-xs text-neutral-400 truncate mt-0.5 font-mono flex items-center gap-1.5">
-                  <Mail className="w-3 h-3 text-neutral-500" />
-                  {user?.email || 'Anonymous Listener'}
-                </p>
+                <div>
+                  <p className="text-xs text-neutral-400 font-medium">Username</p>
+                  <p className="text-sm font-semibold text-white">{currentUsername}</p>
+                  <p className="text-[11px] text-neutral-500">{user?.email || 'Active Listener'}</p>
+                </div>
               </div>
+
+              <button
+                type="button"
+                onClick={() => setIsEditingProfile(!isEditingProfile)}
+                className="px-3.5 py-1.5 rounded-xl bg-white/5 hover:bg-white/10 text-white text-xs font-semibold border border-white/10 transition-colors"
+              >
+                {isEditingProfile ? 'Cancel' : 'Edit Username'}
+              </button>
             </div>
 
-            <button
-              onClick={() => setIsEditingProfile(!isEditingProfile)}
-              className="self-start sm:self-auto px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-semibold border border-zinc-700/60 transition-all flex items-center gap-2 shadow-sm"
-            >
-              <User className="w-3.5 h-3.5" />
-              <span>{isEditingProfile ? 'Cancel Edit' : 'Edit Profile'}</span>
-            </button>
-          </div>
-
-          {/* Inline Edit Form */}
-          {isEditingProfile ? (
-            <form onSubmit={handleSaveProfile} className="pt-4 border-t border-zinc-800 space-y-4 animate-luxury-fade">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {/* Username */}
-                <div>
-                  <label className="block text-[11px] font-medium text-neutral-400 uppercase tracking-wider mb-1.5">
-                    Username
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={editUsername}
-                    onChange={(e) => setEditUsername(e.target.value)}
-                    minLength={3}
-                    maxLength={20}
-                    className="w-full px-3 py-2 bg-black/40 border border-zinc-700 rounded-xl text-xs text-white focus:outline-none focus:border-zinc-400 transition-colors"
-                  />
-                  <p className="text-[10px] text-neutral-500 mt-1">3–20 characters</p>
-                </div>
-
-                {/* Gender */}
-                <div>
-                  <label className="block text-[11px] font-medium text-neutral-400 uppercase tracking-wider mb-1.5">
-                    Gender
-                  </label>
-                  <select
-                    value={editGender}
-                    onChange={(e) => setEditGender(e.target.value)}
-                    className="w-full px-3 py-2 bg-[#121214] border border-zinc-700 rounded-xl text-xs text-white focus:outline-none focus:border-zinc-400 transition-colors"
-                  >
-                    <option value="prefer-not-to-say">Prefer not to say</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                    <option value="non-binary">Non-Binary</option>
-                  </select>
-                </div>
-
-                {/* Date of Birth */}
-                <div>
-                  <label className="block text-[11px] font-medium text-neutral-400 uppercase tracking-wider mb-1.5">
-                    Date of Birth
-                  </label>
-                  <input
-                    type="date"
-                    max={todayStr}
-                    value={editDob}
-                    onChange={(e) => setEditDob(e.target.value)}
-                    className="w-full px-3 py-2 bg-black/40 border border-zinc-700 rounded-xl text-xs text-white focus:outline-none focus:border-zinc-400 transition-colors [color-scheme:dark]"
-                  />
-                  <p className="text-[10px] text-neutral-500 mt-1">DPDP Act legal age verification</p>
-                </div>
-              </div>
-
-              {/* Security reassurance banner */}
-              <div className="p-3 rounded-xl bg-zinc-800/40 border border-zinc-700/60 text-[11px] text-neutral-300 flex items-start gap-2.5">
-                <ShieldCheck className="w-4 h-4 text-zinc-400 shrink-0 mt-0.5" />
-                <span>
-                  Date of birth is encrypted at rest using <strong className="text-white">AES-256-GCM</strong>. Your raw birthdate is never exposed to public profiles.
-                </span>
-              </div>
-
-              <div className="flex items-center justify-end gap-2 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setIsEditingProfile(false)}
-                  className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-neutral-300 text-xs font-medium transition-colors"
-                >
-                  Cancel
-                </button>
+            {/* Inline Username Form */}
+            {isEditingProfile && (
+              <form
+                onSubmit={handleSaveProfile}
+                className="pt-3 border-t border-zinc-800 flex items-center gap-2"
+              >
+                <input
+                  type="text"
+                  value={editUsername}
+                  onChange={(e) => setEditUsername(e.target.value)}
+                  placeholder="Enter username"
+                  className="flex-grow px-3 py-2 rounded-xl bg-black/60 border border-zinc-700 text-white text-xs focus:outline-none focus:border-emerald-500"
+                />
                 <button
                   type="submit"
-                  disabled={authActionLoading || !editUsername.trim()}
-                  className="px-5 py-2 rounded-xl bg-zinc-100 hover:bg-white text-zinc-950 text-xs font-semibold uppercase tracking-wider transition-all disabled:opacity-50 flex items-center gap-2 shadow-md shadow-white/5"
+                  disabled={authActionLoading}
+                  className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-bold transition-all shadow"
                 >
-                  {authActionLoading ? (
-                    <RefreshCw className="w-3.5 h-3.5 animate-spin" />
-                  ) : (
-                    <Save className="w-3.5 h-3.5" />
-                  )}
-                  Save Changes
+                  Save
                 </button>
+              </form>
+            )}
+
+            <div className="h-px bg-zinc-800/80" />
+
+            {/* Close Account Row (Sketch 2 & 4) */}
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <p className="text-sm font-semibold text-white">Close account</p>
+                <p className="text-xs text-neutral-400 mt-0.5">
+                  Permanently erase your credentials, history, and stored data.
+                </p>
               </div>
-            </form>
-          ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 border-t border-zinc-800/80 text-xs">
-              <div className="p-3 rounded-xl bg-black/30 border border-white/5">
-                <span className="text-neutral-500 block text-[10px] uppercase">Plan</span>
-                <span className="text-white font-semibold">Jennie Free • Hi-Fi</span>
-              </div>
-              <div className="p-3 rounded-xl bg-black/30 border border-white/5">
-                <span className="text-neutral-500 block text-[10px] uppercase">Age Tier</span>
-                <span className="text-white font-semibold">{profile?.age_bracket || '18+ Verified'}</span>
-              </div>
-              <div className="p-3 rounded-xl bg-black/30 border border-white/5">
-                <span className="text-neutral-500 block text-[10px] uppercase">Gender</span>
-                <span className="text-white font-semibold capitalize">
-                  {profile?.gender ? profile.gender.replace('-', ' ') : 'Not Specified'}
-                </span>
-              </div>
-              <div className="p-3 rounded-xl bg-black/30 border border-white/5">
-                <span className="text-neutral-500 block text-[10px] uppercase">Security</span>
-                <span className="text-emerald-400 font-semibold flex items-center gap-1">
-                  <ShieldCheck className="w-3.5 h-3.5" /> AES-256
-                </span>
-              </div>
+              <button
+                type="button"
+                onClick={() => setShowDeleteConfirm(true)}
+                className="px-3.5 py-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs font-semibold border border-red-500/30 transition-colors shrink-0"
+              >
+                Close account
+              </button>
             </div>
-          )}
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
 
       {/* ────────────────────────────────────────────────────────────
-          SECTION 2: AUDIO FIDELITY & STREAMING QUALITY (Spotify-Style)
+          CATEGORY 2: NOTIFICATIONS (Sketch 2 & 4)
          ──────────────────────────────────────────────────────────── */}
-      <section className="space-y-4">
-        <h2 className="text-xs font-semibold text-neutral-400 uppercase tracking-wider px-1">
-          Audio Quality &amp; Playback
-        </h2>
-
-        <div className="p-5 sm:p-6 rounded-2xl bg-zinc-900/70 border border-zinc-800 backdrop-blur-md space-y-6">
-          {/* Streaming Quality Selector */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-sm font-semibold text-white">Streaming Quality</h3>
-                <p className="text-xs text-neutral-400 mt-0.5">
-                  Select your desired audio bitrate. Higher quality uses more network bandwidth.
-                </p>
+      {matches('notification push alert playback') && (
+        <section className="space-y-3">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-neutral-400 px-1">
+            Notifications
+          </h2>
+          <div className="p-4 sm:p-5 rounded-2xl bg-zinc-900/70 border border-zinc-800 backdrop-blur-md space-y-4">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <Bell className="w-5 h-5 text-emerald-400 shrink-0" />
+                <div>
+                  <p className="text-sm font-semibold text-white">Push Notifications</p>
+                  <p className="text-xs text-neutral-400">
+                    Receive alerts when new playlists, releases, or trending tracks drop.
+                  </p>
+                </div>
               </div>
-              <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded-lg bg-zinc-800 text-zinc-300 border border-zinc-700">
-                {audioQuality === 'lossless'
-                  ? 'FLAC 24-bit'
-                  : audioQuality === 'very_high'
-                  ? '320 kbps'
-                  : audioQuality === 'high'
-                  ? '256 kbps'
-                  : audioQuality === 'normal'
-                  ? '160 kbps'
-                  : 'Adaptive'}
-              </span>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 pt-1">
-              {[
-                { id: 'auto', label: 'Automatic', sub: 'Adaptive' },
-                { id: 'normal', label: 'Normal', sub: '160 kbps' },
-                { id: 'high', label: 'High', sub: '256 kbps' },
-                { id: 'very_high', label: 'Very High', sub: '320 kbps' },
-                { id: 'lossless', label: 'Lossless Hi-Fi', sub: 'Studio Master' },
-              ].map((q) => (
-                <button
-                  key={q.id}
-                  onClick={() => setAudioQuality(q.id)}
-                  className={`p-3 rounded-xl border text-left transition-all ${
-                    audioQuality === q.id
-                      ? 'bg-zinc-100 text-zinc-950 border-white shadow-md shadow-white/5 font-semibold'
-                      : 'bg-black/30 border-white/5 text-neutral-300 hover:bg-white/5 hover:border-white/10'
-                  }`}
-                >
-                  <span className="block text-xs font-semibold">{q.label}</span>
-                  <span
-                    className={`block text-[10px] mt-0.5 ${
-                      audioQuality === q.id ? 'text-zinc-700 font-medium' : 'text-neutral-500'
-                    }`}
-                  >
-                    {q.sub}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="h-px bg-zinc-800" />
-
-          {/* Autoplay Similar Songs */}
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <h3 className="text-sm font-semibold text-white">Autoplay</h3>
-              <p className="text-xs text-neutral-400 mt-0.5">
-                Keep listening to similar recommended songs when your music or playlist ends.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={toggleAutoplay}
-              className={`w-11 h-6 rounded-full transition-colors relative shrink-0 p-0.5 ${
-                autoplay ? 'bg-zinc-100' : 'bg-zinc-800 border border-zinc-700'
-              }`}
-            >
-              <div
-                className={`w-5 h-5 rounded-full transition-transform ${
-                  autoplay ? 'translate-x-5 bg-black' : 'translate-x-0 bg-neutral-400'
+              <button
+                type="button"
+                onClick={() => setNotificationsEnabled(!notificationsEnabled)}
+                className={`w-11 h-6 rounded-full transition-colors relative shrink-0 p-0.5 ${
+                  notificationsEnabled ? 'bg-emerald-500' : 'bg-zinc-800 border border-zinc-700'
                 }`}
-              />
-            </button>
-          </div>
+              >
+                <div
+                  className={`w-5 h-5 rounded-full transition-transform ${
+                    notificationsEnabled ? 'translate-x-5 bg-black' : 'translate-x-0 bg-neutral-400'
+                  }`}
+                />
+              </button>
+            </div>
 
-          <div className="h-px bg-zinc-800" />
+            <div className="h-px bg-zinc-800/80" />
 
-          {/* Crossfade Songs Slider */}
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-4">
               <div>
-                <h3 className="text-sm font-semibold text-white">Crossfade</h3>
-                <p className="text-xs text-neutral-400 mt-0.5">
-                  Allows seamless crossfading transitions between consecutive tracks.
+                <p className="text-sm font-semibold text-white">Playback Status Banner</p>
+                <p className="text-xs text-neutral-400">
+                  Notify of song progress, queue transitions, and background audio updates.
                 </p>
               </div>
-              <span className="text-xs font-mono font-semibold text-zinc-300">
-                {crossfade === 0 ? 'Off' : `${crossfade}s`}
+              <button
+                type="button"
+                onClick={() => setPlaybackNotifications(!playbackNotifications)}
+                className={`w-11 h-6 rounded-full transition-colors relative shrink-0 p-0.5 ${
+                  playbackNotifications ? 'bg-emerald-500' : 'bg-zinc-800 border border-zinc-700'
+                }`}
+              >
+                <div
+                  className={`w-5 h-5 rounded-full transition-transform ${
+                    playbackNotifications
+                      ? 'translate-x-5 bg-black'
+                      : 'translate-x-0 bg-neutral-400'
+                  }`}
+                />
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ────────────────────────────────────────────────────────────
+          CATEGORY 3: SUPPORT AND REPORT (Sketch 2 & 4)
+         ──────────────────────────────────────────────────────────── */}
+      {matches('support report privacy terms problem problems rules guidelines') && (
+        <section className="space-y-3">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-neutral-400 px-1">
+            Support and report
+          </h2>
+          <div className="rounded-2xl bg-zinc-900/70 border border-zinc-800 backdrop-blur-md divide-y divide-zinc-800/80 overflow-hidden">
+            {/* Privacy policy (Sketch 2 & 4) */}
+            <div
+              onClick={() => {
+                if (onClose) onClose();
+                setActiveView('privacy');
+              }}
+              role="button"
+              tabIndex={0}
+              className="flex items-center justify-between p-4 hover:bg-white/5 transition-colors cursor-pointer"
+            >
+              <div className="flex items-center gap-3">
+                <ShieldCheck className="w-5 h-5 text-emerald-400" />
+                <div>
+                  <p className="text-sm font-semibold text-white">Privacy policy</p>
+                  <p className="text-xs text-neutral-400">
+                    DPDP Act 2023 statutory privacy and encryption rules
+                  </p>
+                </div>
+              </div>
+              <ChevronRight className="w-4 h-4 text-neutral-500" />
+            </div>
+
+            {/* Terms and condition (Sketch 2 & 4) */}
+            <div
+              onClick={() => {
+                if (onClose) onClose();
+                setActiveView('terms');
+              }}
+              role="button"
+              tabIndex={0}
+              className="flex items-center justify-between p-4 hover:bg-white/5 transition-colors cursor-pointer"
+            >
+              <div className="flex items-center gap-3">
+                <FileText className="w-5 h-5 text-zinc-300" />
+                <div>
+                  <p className="text-sm font-semibold text-white">Terms and condition</p>
+                  <p className="text-xs text-neutral-400">
+                    Platform license terms, user rights, and service agreements
+                  </p>
+                </div>
+              </div>
+              <ChevronRight className="w-4 h-4 text-neutral-500" />
+            </div>
+
+            {/* Report for problems (Sketch 2 & 4) */}
+            <div
+              onClick={() => {
+                if (onClose) onClose();
+                setActiveView('feedback');
+              }}
+              role="button"
+              tabIndex={0}
+              className="flex items-center justify-between p-4 hover:bg-white/5 transition-colors cursor-pointer"
+            >
+              <div className="flex items-center gap-3">
+                <HelpCircle className="w-5 h-5 text-amber-400" />
+                <div>
+                  <p className="text-sm font-semibold text-white">Report for problems</p>
+                  <p className="text-xs text-neutral-400">
+                    Report playback buffering, missing audio, or app defects with tracking
+                  </p>
+                </div>
+              </div>
+              <ChevronRight className="w-4 h-4 text-neutral-500" />
+            </div>
+
+            {/* Support (Sketch 2 & 4) */}
+            <div
+              onClick={() => setShowSupportModal(true)}
+              role="button"
+              tabIndex={0}
+              className="flex items-center justify-between p-4 hover:bg-white/5 transition-colors cursor-pointer"
+            >
+              <div className="flex items-center gap-3">
+                <HeartHandshake className="w-5 h-5 text-teal-400" />
+                <div>
+                  <p className="text-sm font-semibold text-white">Support</p>
+                  <p className="text-xs text-neutral-400">
+                    Contact developer assistance, customer care, and help desk
+                  </p>
+                </div>
+              </div>
+              <ChevronRight className="w-4 h-4 text-neutral-500" />
+            </div>
+
+            {/* Platform rules (Sketch 2 & 4) */}
+            <div
+              onClick={() => setShowRulesModal(true)}
+              role="button"
+              tabIndex={0}
+              className="flex items-center justify-between p-4 hover:bg-white/5 transition-colors cursor-pointer"
+            >
+              <div className="flex items-center gap-3">
+                <BookOpen className="w-5 h-5 text-cyan-400" />
+                <div>
+                  <p className="text-sm font-semibold text-white">Platform rules</p>
+                  <p className="text-xs text-neutral-400">
+                    Community standards, fair playback, and terms of respect
+                  </p>
+                </div>
+              </div>
+              <ChevronRight className="w-4 h-4 text-neutral-500" />
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ────────────────────────────────────────────────────────────
+          CATEGORY 4: ABOUT (Sketch 2 & 4: App details, developer details, version)
+         ──────────────────────────────────────────────────────────── */}
+      {matches('about developer version app details') && (
+        <section className="space-y-3">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-neutral-400 px-1">
+            About
+          </h2>
+          <div className="rounded-2xl bg-zinc-900/70 border border-zinc-800 backdrop-blur-md divide-y divide-zinc-800/80 overflow-hidden">
+            {/* App details (Sketch 2 & 4) */}
+            <div
+              onClick={() => setShowAppDetailsModal(true)}
+              role="button"
+              tabIndex={0}
+              className="flex items-center justify-between p-4 hover:bg-white/5 transition-colors cursor-pointer"
+            >
+              <div className="flex items-center gap-3">
+                <Info className="w-5 h-5 text-zinc-300" />
+                <div>
+                  <p className="text-sm font-semibold text-white">App details</p>
+                  <p className="text-xs text-neutral-400">
+                    Jennie Music • Luxury audio streaming web application
+                  </p>
+                </div>
+              </div>
+              <ChevronRight className="w-4 h-4 text-neutral-500" />
+            </div>
+
+            {/* Developer details (Sketch 2 & 4) */}
+            <div
+              onClick={() => setShowDevDetailsModal(true)}
+              role="button"
+              tabIndex={0}
+              className="flex items-center justify-between p-4 hover:bg-white/5 transition-colors cursor-pointer"
+            >
+              <div className="flex items-center gap-3">
+                <Code2 className="w-5 h-5 text-emerald-400" />
+                <div>
+                  <p className="text-sm font-semibold text-white">Developer details</p>
+                  <p className="text-xs text-neutral-400">
+                    Designed &amp; Developed by Bhavesh Patil
+                  </p>
+                </div>
+              </div>
+              <ChevronRight className="w-4 h-4 text-neutral-500" />
+            </div>
+
+            {/* Version (Sketch 2 & 4) */}
+            <div className="flex items-center justify-between p-4">
+              <div className="flex items-center gap-3">
+                <Sparkles className="w-5 h-5 text-amber-400" />
+                <div>
+                  <p className="text-sm font-semibold text-white">Version</p>
+                  <p className="text-xs text-neutral-400">Production Build</p>
+                </div>
+              </div>
+              <span className="text-xs font-mono font-bold text-white bg-white/10 px-2.5 py-1 rounded-full border border-white/10">
+                v0.1.0
               </span>
             </div>
-            <div className="flex items-center gap-3 pt-2">
-              <span className="text-[10px] text-neutral-500 font-mono">0s (Off)</span>
+          </div>
+        </section>
+      )}
+
+      {/* ────────────────────────────────────────────────────────────
+          SECTION: AUDIO FIDELITY & STREAMING QUALITY
+         ──────────────────────────────────────────────────────────── */}
+      {matches('audio quality sound bitrate crossfade autoplay') && (
+        <section className="space-y-3">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-neutral-400 px-1">
+            Audio Quality &amp; Playback
+          </h2>
+          <div className="p-4 sm:p-5 rounded-2xl bg-zinc-900/70 border border-zinc-800 backdrop-blur-md space-y-4">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <h3 className="text-sm font-semibold text-white">Streaming Audio Quality</h3>
+                <p className="text-xs text-neutral-400 mt-0.5">High bitrate studio delivery</p>
+              </div>
+              <select
+                value={audioQuality}
+                onChange={(e) => setAudioQuality(e.target.value)}
+                className="bg-black/80 text-white text-xs px-3 py-2 rounded-xl border border-zinc-700 focus:outline-none"
+              >
+                <option value="auto">Auto (Adaptive)</option>
+                <option value="low">Low (96 kbps)</option>
+                <option value="normal">Normal (160 kbps)</option>
+                <option value="high">High (256 kbps)</option>
+                <option value="very_high">Very High (320 kbps Lossless)</option>
+              </select>
+            </div>
+
+            <div className="h-px bg-zinc-800/80" />
+
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <h3 className="text-sm font-semibold text-white">Autoplay Next Similar Track</h3>
+                <p className="text-xs text-neutral-400 mt-0.5">
+                  Keep the music going after your queue ends
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={toggleAutoplay}
+                className={`w-11 h-6 rounded-full transition-colors relative shrink-0 p-0.5 ${
+                  autoplay ? 'bg-emerald-500' : 'bg-zinc-800 border border-zinc-700'
+                }`}
+              >
+                <div
+                  className={`w-5 h-5 rounded-full transition-transform ${
+                    autoplay ? 'translate-x-5 bg-black' : 'translate-x-0 bg-neutral-400'
+                  }`}
+                />
+              </button>
+            </div>
+
+            <div className="h-px bg-zinc-800/80" />
+
+            {/* Crossfade */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-semibold text-white">Crossfade Songs</span>
+                <span className="font-mono text-emerald-400 font-bold">{crossfade}s</span>
+              </div>
               <input
                 type="range"
                 min="0"
                 max="12"
                 step="1"
                 value={crossfade}
-                onChange={(e) => setCrossfade(e.target.value)}
-                className="w-full accent-zinc-200 h-1.5 bg-zinc-800 rounded-lg cursor-pointer"
+                onChange={(e) => setCrossfade(Number(e.target.value))}
+                className="w-full accent-emerald-500 cursor-pointer h-1.5 bg-zinc-800 rounded-lg"
               />
-              <span className="text-[10px] text-neutral-500 font-mono">12s</span>
             </div>
-          </div>
 
-          <div className="h-px bg-zinc-800" />
+            <div className="h-px bg-zinc-800/80" />
 
-          {/* Automix & Smooth Transitions */}
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <h3 className="text-sm font-semibold text-white">Automix</h3>
-              <p className="text-xs text-neutral-400 mt-0.5">
-                Enables smooth beatmatched transitions between tracks in curated mixes.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={toggleAutomix}
-              className={`w-11 h-6 rounded-full transition-colors relative shrink-0 p-0.5 ${
-                automix ? 'bg-zinc-100' : 'bg-zinc-800 border border-zinc-700'
-              }`}
-            >
-              <div
-                className={`w-5 h-5 rounded-full transition-transform ${
-                  automix ? 'translate-x-5 bg-black' : 'translate-x-0 bg-neutral-400'
-                }`}
-              />
-            </button>
-          </div>
-
-          <div className="h-px bg-zinc-800" />
-
-          {/* Normalize Volume */}
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <h3 className="text-sm font-semibold text-white">Normalize Volume</h3>
-              <p className="text-xs text-neutral-400 mt-0.5">
-                Maintains a consistent volume level across loud and quiet tracks.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={toggleNormalizeVolume}
-              className={`w-11 h-6 rounded-full transition-colors relative shrink-0 p-0.5 ${
-                normalizeVolume ? 'bg-zinc-100' : 'bg-zinc-800 border border-zinc-700'
-              }`}
-            >
-              <div
-                className={`w-5 h-5 rounded-full transition-transform ${
-                  normalizeVolume ? 'translate-x-5 bg-black' : 'translate-x-0 bg-neutral-400'
-                }`}
-              />
-            </button>
-          </div>
-
-          <div className="h-px bg-zinc-800" />
-
-          {/* Mono Audio */}
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <h3 className="text-sm font-semibold text-white">Mono Audio</h3>
-              <p className="text-xs text-neutral-400 mt-0.5">
-                Combines stereo channels into both left and right speakers for single-earbud listening.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={toggleMonoAudio}
-              className={`w-11 h-6 rounded-full transition-colors relative shrink-0 p-0.5 ${
-                monoAudio ? 'bg-zinc-100' : 'bg-zinc-800 border border-zinc-700'
-              }`}
-            >
-              <div
-                className={`w-5 h-5 rounded-full transition-transform ${
-                  monoAudio ? 'translate-x-5 bg-black' : 'translate-x-0 bg-neutral-400'
-                }`}
-              />
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* ────────────────────────────────────────────────────────────
-          SECTION 3: PRIVACY & SOCIAL (Spotify Private Session)
-         ──────────────────────────────────────────────────────────── */}
-      <section className="space-y-4">
-        <h2 className="text-xs font-semibold text-neutral-400 uppercase tracking-wider px-1">
-          Privacy &amp; Social
-        </h2>
-
-        <div className="p-5 sm:p-6 rounded-2xl bg-zinc-900/70 border border-zinc-800 backdrop-blur-md space-y-6">
-          {/* Private Session Toggle */}
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-2">
-                <h3 className="text-sm font-semibold text-white">Private Session</h3>
-                {privateSession && (
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-300 border border-zinc-700">
-                    Incognito Active
-                  </span>
-                )}
-              </div>
-              <p className="text-xs text-neutral-400 mt-0.5">
-                Listen anonymously. What you stream during a private session will not affect your taste recommendations or be saved to public history.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={togglePrivateSession}
-              className={`w-11 h-6 rounded-full transition-colors relative shrink-0 p-0.5 ${
-                privateSession ? 'bg-zinc-100' : 'bg-zinc-800 border border-zinc-700'
-              }`}
-            >
-              <div
-                className={`w-5 h-5 rounded-full transition-transform ${
-                  privateSession ? 'translate-x-5 bg-black' : 'translate-x-0 bg-neutral-400'
-                }`}
-              />
-            </button>
-          </div>
-
-          <div className="h-px bg-zinc-800" />
-
-          {/* Listening Activity Toggle */}
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <h3 className="text-sm font-semibold text-white">Publish Listening Activity</h3>
-              <p className="text-xs text-neutral-400 mt-0.5">
-                Display what songs and artists you stream on your public Jennie profile.
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={toggleListeningActivity}
-              className={`w-11 h-6 rounded-full transition-colors relative shrink-0 p-0.5 ${
-                listeningActivity ? 'bg-zinc-100' : 'bg-zinc-800 border border-zinc-700'
-              }`}
-            >
-              <div
-                className={`w-5 h-5 rounded-full transition-transform ${
-                  listeningActivity ? 'translate-x-5 bg-black' : 'translate-x-0 bg-neutral-400'
-                }`}
-              />
-            </button>
-          </div>
-
-          <div className="h-px bg-zinc-800" />
-
-          {/* DPDP Act 2023 Statutory Privacy & Cookie Management */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
+            {/* Normalize Volume */}
+            <div className="flex items-center justify-between gap-4">
               <div>
-                <h3 className="text-sm font-semibold text-white">DPDP Act 2023 Statutory Rights</h3>
+                <h3 className="text-sm font-semibold text-white">Normalize Volume</h3>
                 <p className="text-xs text-neutral-400 mt-0.5">
-                  Your data is protected under India's Digital Personal Data Protection Act, 2023. Zero ad tracking.
+                  Set the same volume level for all tracks
                 </p>
               </div>
+              <button
+                type="button"
+                onClick={toggleNormalizeVolume}
+                className={`w-11 h-6 rounded-full transition-colors relative shrink-0 p-0.5 ${
+                  normalizeVolume ? 'bg-emerald-500' : 'bg-zinc-800 border border-zinc-700'
+                }`}
+              >
+                <div
+                  className={`w-5 h-5 rounded-full transition-transform ${
+                    normalizeVolume ? 'translate-x-5 bg-black' : 'translate-x-0 bg-neutral-400'
+                  }`}
+                />
+              </button>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2 pt-1">
-              {onOpenCookieSettings && (
-                <button
-                  type="button"
-                  onClick={onOpenCookieSettings}
-                  className="px-3.5 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-750 text-white text-xs font-medium border border-zinc-700 transition-colors"
-                >
-                  Manage Cookie Settings
-                </button>
-              )}
+            <div className="h-px bg-zinc-800/80" />
 
+            {/* Mono Audio */}
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <h3 className="text-sm font-semibold text-white">Mono Audio</h3>
+                <p className="text-xs text-neutral-400 mt-0.5">
+                  Combine left and right audio channels
+                </p>
+              </div>
               <button
                 type="button"
-                onClick={() => {
-                  if (onClose) onClose();
-                  setActiveView('privacy');
-                }}
-                className="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 text-xs font-medium border border-white/10 transition-colors flex items-center gap-1.5"
+                onClick={toggleMonoAudio}
+                className={`w-11 h-6 rounded-full transition-colors relative shrink-0 p-0.5 ${
+                  monoAudio ? 'bg-emerald-500' : 'bg-zinc-800 border border-zinc-700'
+                }`}
               >
-                <span>Read DPDP Privacy Policy</span>
-                <ExternalLink className="w-3 h-3 text-neutral-400" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  if (onClose) onClose();
-                  setActiveView('terms');
-                }}
-                className="px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-zinc-300 text-xs font-medium border border-white/10 transition-colors flex items-center gap-1.5"
-              >
-                <span>Terms of Service</span>
-                <ExternalLink className="w-3 h-3 text-neutral-400" />
+                <div
+                  className={`w-5 h-5 rounded-full transition-transform ${
+                    monoAudio ? 'translate-x-5 bg-black' : 'translate-x-0 bg-neutral-400'
+                  }`}
+                />
               </button>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* ────────────────────────────────────────────────────────────
-          SECTION 4: STORAGE & CACHE (Spotify-Style Storage Bar)
+          SECTION: APP PERMISSIONS & HARDWARE ACCESS
          ──────────────────────────────────────────────────────────── */}
-      <section className="space-y-4">
-        <h2 className="text-xs font-semibold text-neutral-400 uppercase tracking-wider px-1">
-          Storage &amp; Cache
-        </h2>
+      {matches('permission permissions hardware audio storage mic headphone') && (
+        <PermissionSettingsSection />
+      )}
 
-        <div className="p-5 sm:p-6 rounded-2xl bg-zinc-900/70 border border-zinc-800 backdrop-blur-md space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-sm font-semibold text-white flex items-center gap-2">
-                <Database className="w-4 h-4 text-zinc-400" />
-                <span>Cached Data &amp; Audio Buffer</span>
-              </h3>
-              <p className="text-xs text-neutral-400 mt-0.5">
-                Clearing your cache will not delete your saved playlists, likes, or account identity.
-              </p>
-            </div>
-            <span className="text-xs font-mono font-semibold text-zinc-300 bg-zinc-800 px-2.5 py-1 rounded-lg border border-zinc-700">
-              {cacheSize}
-            </span>
-          </div>
-
-          {/* Visual Storage Bar */}
-          <div className="w-full h-2.5 rounded-full bg-zinc-800 overflow-hidden flex">
-            <div className="h-full bg-zinc-400 w-[22%]" title="App Code & Assets (22%)" />
-            <div className="h-full bg-zinc-600 w-[14%]" title="Audio Buffer & Cache (14%)" />
-            <div className="h-full bg-zinc-800 w-[64%]" title="Free Storage (64%)" />
-          </div>
-
-          <div className="flex items-center justify-between text-[11px] text-neutral-500 pt-1">
-            <div className="flex items-center gap-4">
-              <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-zinc-400 inline-block" /> App Engine
-              </span>
-              <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-zinc-600 inline-block" /> Cached Audio
+      {/* ────────────────────────────────────────────────────────────
+          SECTION: STORAGE & CACHE
+         ──────────────────────────────────────────────────────────── */}
+      {matches('storage cache buffer clear') && (
+        <section className="space-y-3">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-neutral-400 px-1">
+            Storage &amp; Cache
+          </h2>
+          <div className="p-4 sm:p-5 rounded-2xl bg-zinc-900/70 border border-zinc-800 backdrop-blur-md space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-sm font-semibold text-white flex items-center gap-2">
+                  <Database className="w-4 h-4 text-zinc-400" />
+                  <span>Cached Data &amp; Audio Buffer</span>
+                </h3>
+                <p className="text-xs text-neutral-400 mt-0.5">
+                  Clearing cache frees space without deleting playlists or liked tracks.
+                </p>
+              </div>
+              <span className="text-xs font-mono font-semibold text-zinc-300 bg-zinc-800 px-2.5 py-1 rounded-lg border border-zinc-700">
+                {cacheSize}
               </span>
             </div>
 
-            <button
-              type="button"
-              onClick={handleClearCache}
-              className="px-3.5 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-750 text-white text-xs font-semibold border border-zinc-700 transition-colors"
-            >
-              Clear Cache
-            </button>
-          </div>
+            <div className="flex items-center justify-between pt-1">
+              <span className="text-[11px] text-neutral-500">Fast local storage buffer</span>
+              <button
+                type="button"
+                onClick={handleClearCache}
+                className="px-3.5 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-semibold border border-zinc-700 transition-colors"
+              >
+                Clear Cache
+              </button>
+            </div>
 
-          {cacheClearedNotice && (
-            <p className="text-[11px] text-emerald-400 flex items-center gap-1.5 pt-1 animate-luxury-fade">
-              <Check className="w-3.5 h-3.5" /> Cache buffer cleaned successfully.
-            </p>
-          )}
-        </div>
-      </section>
+            {cacheClearedNotice && (
+              <p className="text-[11px] text-emerald-400 flex items-center gap-1.5 pt-1">
+                <Check className="w-3.5 h-3.5" /> Cache buffer cleaned successfully.
+              </p>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* ────────────────────────────────────────────────────────────
-          SECTION 5: ACCOUNT ACTIONS & DANGER ZONE
+          LOG OUT BUTTON (Sketch 2 & 4)
          ──────────────────────────────────────────────────────────── */}
-      <section className="space-y-4">
-        <h2 className="text-xs font-semibold text-neutral-400 uppercase tracking-wider px-1">
-          Account Actions &amp; Security
-        </h2>
+      {matches('log out logout sign out signout') && (
+        <div className="pt-2">
+          <button
+            type="button"
+            onClick={async () => {
+              await signOutUser();
+              if (onClose) onClose();
+              setActiveView('home');
+            }}
+            className="w-full py-3.5 rounded-2xl bg-zinc-800 hover:bg-zinc-700 text-red-400 hover:text-red-300 font-bold text-sm border border-zinc-700 transition-all flex items-center justify-center gap-2 shadow-lg active:scale-95"
+          >
+            <LogOut className="w-4 h-4" />
+            <span>Log out</span>
+          </button>
+        </div>
+      )}
 
-        <div className="p-5 sm:p-6 rounded-2xl bg-zinc-900/70 border border-zinc-800 backdrop-blur-md space-y-5">
-          {/* Sign Out Action */}
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <h3 className="text-sm font-semibold text-white">Sign Out</h3>
-              <p className="text-xs text-neutral-400 mt-0.5">
-                Sign out of your Jennie session on this browser.
+      {/* ────────────────────────────────────────────────────────────
+          MODAL: SUPPORT (Sketch 2 & 4)
+         ──────────────────────────────────────────────────────────── */}
+      {showSupportModal && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="max-w-md w-full p-6 rounded-3xl bg-zinc-900 border border-white/10 shadow-2xl space-y-4 text-white">
+            <div className="flex items-center justify-between pb-3 border-b border-white/10">
+              <div className="flex items-center gap-2.5">
+                <HeartHandshake className="w-5 h-5 text-teal-400" />
+                <h3 className="text-base font-bold">Jennie Support &amp; Help Desk</h3>
+              </div>
+              <button
+                onClick={() => setShowSupportModal(false)}
+                className="p-1.5 rounded-full hover:bg-white/10 text-neutral-400 hover:text-white"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <p className="text-xs text-neutral-300 leading-relaxed">
+              We provide round-the-clock developer support for Jennie Music listeners. Reach out for
+              any playback assistance or queries.
+            </p>
+            <div className="p-3.5 rounded-2xl bg-white/[0.04] border border-white/5 space-y-2 text-xs">
+              <p>
+                <strong className="text-white">Lead Engineer:</strong> Bhavesh Patil
+              </p>
+              <p>
+                <strong className="text-white">Email:</strong> bhaveshpatil4251@gmail.com
+              </p>
+              <p>
+                <strong className="text-white">Response Time:</strong> Within 24-48 hours
               </p>
             </div>
             <button
-              type="button"
-              onClick={async () => {
-                await signOutUser();
-                if (onClose) onClose();
-                setActiveView('home');
-              }}
-              className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-750 text-white text-xs font-semibold border border-zinc-700 transition-all flex items-center gap-2"
+              onClick={() => setShowSupportModal(false)}
+              className="w-full py-2.5 rounded-xl bg-white text-black font-bold text-xs"
             >
-              <LogOut className="w-3.5 h-3.5" />
-              <span>Sign Out</span>
-            </button>
-          </div>
-
-          <div className="h-px bg-zinc-800" />
-
-          {/* Danger Zone: Permanent Account Deletion */}
-          <div className="p-4 rounded-xl bg-red-500/5 border border-red-500/20 space-y-3">
-            <div className="flex items-center gap-2 text-red-400 font-semibold text-xs">
-              <AlertTriangle className="w-4 h-4" />
-              <span>Danger Zone • DPDP Act Section 12 Right to Erasure</span>
-            </div>
-            <p className="text-xs text-neutral-400 leading-relaxed">
-              Permanently delete your account, listening history, and encrypted personal data. This statutory erasure is irreversible.
-            </p>
-
-            <button
-              type="button"
-              onClick={() => setShowDeleteConfirm(true)}
-              className="py-2 px-3.5 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 hover:text-red-300 text-xs font-semibold border border-red-500/30 transition-all flex items-center gap-2"
-            >
-              <Trash2 className="w-3.5 h-3.5" />
-              <span>Permanently Delete Account</span>
+              Close
             </button>
           </div>
         </div>
-      </section>
+      )}
+
+      {/* ────────────────────────────────────────────────────────────
+          MODAL: PLATFORM RULES (Sketch 2 & 4)
+         ──────────────────────────────────────────────────────────── */}
+      {showRulesModal && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="max-w-md w-full p-6 rounded-3xl bg-zinc-900 border border-white/10 shadow-2xl space-y-4 text-white">
+            <div className="flex items-center justify-between pb-3 border-b border-white/10">
+              <div className="flex items-center gap-2.5">
+                <BookOpen className="w-5 h-5 text-cyan-400" />
+                <h3 className="text-base font-bold">Platform Rules</h3>
+              </div>
+              <button
+                onClick={() => setShowRulesModal(false)}
+                className="p-1.5 rounded-full hover:bg-white/10 text-neutral-400 hover:text-white"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="space-y-2.5 text-xs text-neutral-300">
+              <p>
+                1. <strong className="text-white">Respectful Listening:</strong> Enjoy music
+                responsibly without abusive streaming bots or automated scrobble scraping.
+              </p>
+              <p>
+                2. <strong className="text-white">Artist Integrity:</strong> All audio playback
+                utilizes licensed YouTube IFrame embeds honoring content creators and rights
+                holders.
+              </p>
+              <p>
+                3. <strong className="text-white">Zero Exploits:</strong> Reverse-engineering
+                playback streams or tampering with player restrictions is strictly prohibited.
+              </p>
+            </div>
+            <button
+              onClick={() => setShowRulesModal(false)}
+              className="w-full py-2.5 rounded-xl bg-white text-black font-bold text-xs"
+            >
+              Understood
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ────────────────────────────────────────────────────────────
+          MODAL: APP DETAILS (Sketch 2 & 4)
+         ──────────────────────────────────────────────────────────── */}
+      {showAppDetailsModal && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="max-w-md w-full p-6 rounded-3xl bg-zinc-900 border border-white/10 shadow-2xl space-y-4 text-white">
+            <div className="flex items-center justify-between pb-3 border-b border-white/10">
+              <div className="flex items-center gap-2.5">
+                <Info className="w-5 h-5 text-zinc-300" />
+                <h3 className="text-base font-bold">App Details</h3>
+              </div>
+              <button
+                onClick={() => setShowAppDetailsModal(false)}
+                className="p-1.5 rounded-full hover:bg-white/10 text-neutral-400 hover:text-white"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="space-y-2 text-xs text-neutral-300">
+              <p>
+                <strong className="text-white">Application Name:</strong> Jennie Music
+              </p>
+              <p>
+                <strong className="text-white">Audio Engine:</strong> YouTube IFrame Embed &amp;
+                Lossless HTML5 Media Engine
+              </p>
+              <p>
+                <strong className="text-white">Fidelity:</strong> Up to 320 kbps High Definition
+              </p>
+              <p>
+                <strong className="text-white">Platform Target:</strong> Responsive Web &amp;
+                Windows Desktop Client
+              </p>
+            </div>
+            <button
+              onClick={() => setShowAppDetailsModal(false)}
+              className="w-full py-2.5 rounded-xl bg-white text-black font-bold text-xs"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ────────────────────────────────────────────────────────────
+          MODAL: DEVELOPER DETAILS (Sketch 2 & 4)
+         ──────────────────────────────────────────────────────────── */}
+      {showDevDetailsModal && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="max-w-md w-full p-6 rounded-3xl bg-zinc-900 border border-white/10 shadow-2xl space-y-4 text-white">
+            <div className="flex items-center justify-between pb-3 border-b border-white/10">
+              <div className="flex items-center gap-2.5">
+                <Code2 className="w-5 h-5 text-emerald-400" />
+                <h3 className="text-base font-bold">Developer Details</h3>
+              </div>
+              <button
+                onClick={() => setShowDevDetailsModal(false)}
+                className="p-1.5 rounded-full hover:bg-white/10 text-neutral-400 hover:text-white"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="space-y-2 text-xs text-neutral-300">
+              <p>
+                <strong className="text-white">Lead Developer:</strong> Bhavesh Patil
+              </p>
+              <p>
+                <strong className="text-white">Email:</strong> bhaveshpatil4251@gmail.com
+              </p>
+              <p>
+                <strong className="text-white">Project:</strong> Jennie Music Streaming Web App
+              </p>
+              <p>
+                <strong className="text-white">Architecture:</strong> React, Vite, Tailwind CSS,
+                Zustand, Firebase &amp; MongoDB
+              </p>
+            </div>
+            <button
+              onClick={() => setShowDevDetailsModal(false)}
+              className="w-full py-2.5 rounded-xl bg-white text-black font-bold text-xs"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* ────────────────────────────────────────────────────────────
           DELETE ACCOUNT CONFIRMATION MODAL
@@ -748,9 +906,11 @@ export function SpotifySettings({ onClose, onOpenCookieSettings }) {
             </div>
 
             <div className="space-y-1.5">
-              <h3 className="text-base font-bold text-white">Permanently Delete Account?</h3>
+              <h3 className="text-base font-bold text-white">Permanently Close Account?</h3>
               <p className="text-xs text-neutral-400 leading-relaxed">
-                Under Section 12 of India's <strong className="text-white">DPDP Act, 2023</strong> (Right to Erasure), all your account data, credentials, and encrypted records will be deleted immediately.
+                Under Section 12 of India&apos;s{' '}
+                <strong className="text-white">DPDP Act, 2023</strong> (Right to Erasure), all your
+                account data, credentials, and encrypted records will be deleted immediately.
               </p>
             </div>
 
@@ -759,34 +919,31 @@ export function SpotifySettings({ onClose, onOpenCookieSettings }) {
                 type="checkbox"
                 checked={confirmCheckbox}
                 onChange={(e) => setConfirmCheckbox(e.target.checked)}
-                className="mt-0.5 w-4 h-4 rounded border-white/20 bg-white/5 text-red-500 focus:ring-red-500 accent-red-500 cursor-pointer shrink-0"
+                className="mt-0.5 accent-red-500 rounded"
               />
-              <span className="text-xs text-neutral-300 leading-tight">
-                I understand this action is permanent and irrevocably purges my account and playlists.
+              <span className="text-xs text-neutral-300">
+                I understand this deletion is permanent and cannot be reversed.
               </span>
             </label>
 
-            <div className="space-y-2 pt-2">
+            <div className="flex items-center gap-3 pt-2">
               <button
                 type="button"
-                onClick={handleDeletePermanent}
-                disabled={authActionLoading || !confirmCheckbox}
-                className="w-full py-2.5 px-4 rounded-xl bg-red-600 hover:bg-red-500 text-white font-semibold text-xs tracking-wider uppercase transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-lg shadow-red-600/20"
+                onClick={() => {
+                  setShowDeleteConfirm(false);
+                  setConfirmCheckbox(false);
+                }}
+                className="w-1/2 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-semibold"
               >
-                {authActionLoading ? (
-                  <RefreshCw className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Trash2 className="w-4 h-4" />
-                )}
-                Confirm Permanent Erasure
+                Cancel
               </button>
-
               <button
                 type="button"
-                onClick={() => setShowDeleteConfirm(false)}
-                className="w-full py-2 px-4 rounded-xl bg-white/5 hover:bg-white/10 text-neutral-400 hover:text-white text-xs font-medium transition-colors"
+                disabled={!confirmCheckbox || authActionLoading}
+                onClick={handleDeletePermanent}
+                className="w-1/2 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 disabled:opacity-50 text-white text-xs font-semibold shadow-lg"
               >
-                Cancel &amp; Keep Account
+                Confirm Delete
               </button>
             </div>
           </div>
@@ -795,3 +952,5 @@ export function SpotifySettings({ onClose, onOpenCookieSettings }) {
     </div>
   );
 }
+
+export default SpotifySettings;
