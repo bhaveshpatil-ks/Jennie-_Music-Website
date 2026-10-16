@@ -29,14 +29,13 @@ export const ARTISTS_DATA = [
     topTrackIds: [
       'yt-BddP6PYo2gs', // Kesariya
       'yt-ElZfdU54Cp8', // Apna Bana Le
-      'yt-RLzC55ai0eo', // Satranga
-      'yt-AFTIVN8rRbI', // Heeriye
-      'yt-gvyUuxdRdR4', // O Maahi
-      'yt-sK7riqg2mr4', // Chaleya
-      'yt-KUpwupYj_tY', // Sajni
-      'yt-Bi7sSC046dk', // Tum Se Hi
-      'yt-cWMxCE2HTag', // Dil Sambhal Ja Zara
-      'yt-bzSTpdcs-EI'  // Shayad
+      'yt-HrnrqYxYrbk', // Satranga
+      'yt-RLzC55ai0eo', // Heeriye
+      'yt-KUpwupYj_tY', // Tere Hawaale
+      'yt-AFTIVN8rRbI', // Sajni
+      'yt-Bi7sSC046dk', // Chaleya
+      'yt-bzSTpdcs-EI', // Channa Mereya
+      'yt-sK7riqg2mr4'  // Agar Tum Saath Ho
     ],
     albums: [
       {
@@ -45,7 +44,7 @@ export const ARTISTS_DATA = [
         type: 'Album',
         releaseYear: 2022,
         coverUrl: 'https://i.ytimg.com/vi/BddP6PYo2gs/hqdefault.jpg',
-        trackIds: ['yt-BddP6PYo2gs', 'yt-RLzC55ai0eo', 'yt-AFTIVN8rRbI'],
+        trackIds: ['yt-BddP6PYo2gs'],
         totalTracks: 6,
         genre: 'Bollywood'
       },
@@ -54,8 +53,8 @@ export const ARTISTS_DATA = [
         title: 'ANIMAL (Soundtrack)',
         type: 'Album',
         releaseYear: 2023,
-        coverUrl: 'https://i.ytimg.com/vi/RLzC55ai0eo/hqdefault.jpg',
-        trackIds: ['yt-RLzC55ai0eo', 'yt-iAIBF2ngbWY'],
+        coverUrl: 'https://i.ytimg.com/vi/HrnrqYxYrbk/hqdefault.jpg',
+        trackIds: ['yt-HrnrqYxYrbk'],
         totalTracks: 8,
         genre: 'Bollywood Romantic'
       },
@@ -74,8 +73,8 @@ export const ARTISTS_DATA = [
         title: 'Jawan (Original Motion Picture Soundtrack)',
         type: 'Album',
         releaseYear: 2023,
-        coverUrl: 'https://i.ytimg.com/vi/sK7riqg2mr4/hqdefault.jpg',
-        trackIds: ['yt-sK7riqg2mr4'],
+        coverUrl: 'https://i.ytimg.com/vi/Bi7sSC046dk/hqdefault.jpg',
+        trackIds: ['yt-Bi7sSC046dk'],
         totalTracks: 7,
         genre: 'Bollywood Action / Pop'
       }
@@ -86,8 +85,8 @@ export const ARTISTS_DATA = [
         title: 'Heeriye',
         type: 'Single',
         releaseYear: 2023,
-        coverUrl: 'https://i.ytimg.com/vi/AFTIVN8rRbI/hqdefault.jpg',
-        trackIds: ['yt-AFTIVN8rRbI'],
+        coverUrl: 'https://i.ytimg.com/vi/RLzC55ai0eo/hqdefault.jpg',
+        trackIds: ['yt-RLzC55ai0eo'],
         totalTracks: 1,
         genre: 'Indie Pop'
       },
@@ -96,8 +95,8 @@ export const ARTISTS_DATA = [
         title: 'Sajni (Laapataa Ladies)',
         type: 'Single',
         releaseYear: 2024,
-        coverUrl: 'https://i.ytimg.com/vi/KUpwupYj_tY/hqdefault.jpg',
-        trackIds: ['yt-KUpwupYj_tY'],
+        coverUrl: 'https://i.ytimg.com/vi/AFTIVN8rRbI/hqdefault.jpg',
+        trackIds: ['yt-AFTIVN8rRbI'],
         totalTracks: 1,
         genre: 'Soulful'
       }
@@ -127,7 +126,8 @@ export const ARTISTS_DATA = [
       'yt-vsWxs1tuwDk', // Winning Speech
       'yt-k85UB5b6pJU', // Admirin' You
       'yt-Pd1yGW_g2T8', // Ashke
-      'yt-XTp5jaRU3Ws'  // Wavy
+      'yt-XTp5jaRU3Ws', // Wavy
+      'yt-3j7bhOvW6jw'  // Low Fade
     ],
     albums: [
       {
@@ -167,8 +167,8 @@ export const ARTISTS_DATA = [
         title: 'Tauba Tauba (Bad Newz)',
         type: 'Single',
         releaseYear: 2024,
-        coverUrl: 'https://i.ytimg.com/vi/n_FCrCQ6-9U/hqdefault.jpg',
-        trackIds: ['yt-n_FCrCQ6-9U'],
+        coverUrl: 'https://i.ytimg.com/vi/LK7-_dgAVQE/hqdefault.jpg',
+        trackIds: ['yt-LK7-_dgAVQE'],
         totalTracks: 1,
         genre: 'Punjabi Pop / Dance'
       },
@@ -202,10 +202,11 @@ export const ARTISTS_DATA = [
     headerColor: '#7C3AED',
     genres: ['Punjabi Pop', 'Urban Folk', 'Bhangra', 'Dance'],
     topTrackIds: [
-      'yt-001_naina',
-      'yt-LK7-_dgAVQE',
-      'yt-4DfVxVeqk2o',
-      'yt-pXRviuL6vMY'
+      'yt-mH_LFkWxpI0', // Lover
+      'yt-cl0a3i2wFcc', // G.O.A.T.
+      'yt-p4oX1lqA8U8', // Kinni Kinni
+      'yt-3u6lLWGjFLY', // Naina
+      'yt-GfO-3P_L2Fw'  // Proper Patola
     ],
     albums: [
       {
@@ -213,8 +214,8 @@ export const ARTISTS_DATA = [
         title: 'Ghost',
         type: 'Album',
         releaseYear: 2023,
-        coverUrl: 'https://i.ytimg.com/vi/LK7-_dgAVQE/hqdefault.jpg',
-        trackIds: ['yt-LK7-_dgAVQE'],
+        coverUrl: 'https://i.ytimg.com/vi/mH_LFkWxpI0/hqdefault.jpg',
+        trackIds: ['yt-mH_LFkWxpI0', 'yt-p4oX1lqA8U8'],
         totalTracks: 22,
         genre: 'Punjabi Pop'
       },
@@ -223,20 +224,10 @@ export const ARTISTS_DATA = [
         title: 'G.O.A.T.',
         type: 'Album',
         releaseYear: 2020,
-        coverUrl: 'https://i.ytimg.com/vi/4DfVxVeqk2o/hqdefault.jpg',
-        trackIds: ['yt-4DfVxVeqk2o'],
+        coverUrl: 'https://i.ytimg.com/vi/cl0a3i2wFcc/hqdefault.jpg',
+        trackIds: ['yt-cl0a3i2wFcc'],
         totalTracks: 16,
         genre: 'Bhangra'
-      },
-      {
-        id: 'album-moonchild',
-        title: 'MoonChild Era',
-        type: 'Album',
-        releaseYear: 2021,
-        coverUrl: 'https://i.ytimg.com/vi/0pWsCiBvLOk/hqdefault.jpg',
-        trackIds: ['yt-0pWsCiBvLOk'],
-        totalTracks: 9,
-        genre: 'Synth-Pop'
       }
     ],
     singles: [
@@ -245,10 +236,20 @@ export const ARTISTS_DATA = [
         title: 'Naina (Crew)',
         type: 'Single',
         releaseYear: 2024,
-        coverUrl: 'https://i.ytimg.com/vi/LK7-_dgAVQE/hqdefault.jpg',
-        trackIds: ['yt-LK7-_dgAVQE'],
+        coverUrl: 'https://i.ytimg.com/vi/3u6lLWGjFLY/hqdefault.jpg',
+        trackIds: ['yt-3u6lLWGjFLY'],
         totalTracks: 1,
         genre: 'Bollywood / Punjabi'
+      },
+      {
+        id: 'single-lover',
+        title: 'Lover',
+        type: 'Single',
+        releaseYear: 2021,
+        coverUrl: 'https://i.ytimg.com/vi/mH_LFkWxpI0/hqdefault.jpg',
+        trackIds: ['yt-mH_LFkWxpI0'],
+        totalTracks: 1,
+        genre: 'Punjabi Pop'
       }
     ],
     relatedArtistIds: ['karan_aujla', 'ap_dhillon', 'badshah', 'sidhu_moose_wala']
@@ -270,28 +271,18 @@ export const ARTISTS_DATA = [
     headerColor: '#2563EB',
     genres: ['Punjabi Synthwave', 'R&B', 'Trap', 'Indie'],
     topTrackIds: [
-      'yt-cWMxCE2HTag', // With You
-      'yt-LK7-_dgAVQE',
-      'yt-0pWsCiBvLOk'
+      'yt-pXRviuL6vMY', // With You
+      'yt-VNs_cCtdbPc', // Brown Munde
+      'yt-vX2cDW8LUWk'  // Excuses
     ],
     albums: [
-      {
-        id: 'album-two-hearts',
-        title: 'Two Hearts Never Break the Same',
-        type: 'EP',
-        releaseYear: 2022,
-        coverUrl: 'https://i.ytimg.com/vi/cWMxCE2HTag/hqdefault.jpg',
-        trackIds: ['yt-cWMxCE2HTag'],
-        totalTracks: 6,
-        genre: 'Synth-Pop'
-      },
       {
         id: 'album-not-by-chance',
         title: 'Not By Chance',
         type: 'Album',
         releaseYear: 2020,
-        coverUrl: 'https://i.ytimg.com/vi/4DfVxVeqk2o/hqdefault.jpg',
-        trackIds: ['yt-4DfVxVeqk2o'],
+        coverUrl: 'https://i.ytimg.com/vi/VNs_cCtdbPc/hqdefault.jpg',
+        trackIds: ['yt-VNs_cCtdbPc', 'yt-vX2cDW8LUWk'],
         totalTracks: 7,
         genre: 'Trap / R&B'
       }
@@ -302,10 +293,20 @@ export const ARTISTS_DATA = [
         title: 'With You',
         type: 'Single',
         releaseYear: 2023,
-        coverUrl: 'https://i.ytimg.com/vi/cWMxCE2HTag/hqdefault.jpg',
-        trackIds: ['yt-cWMxCE2HTag'],
+        coverUrl: 'https://i.ytimg.com/vi/pXRviuL6vMY/hqdefault.jpg',
+        trackIds: ['yt-pXRviuL6vMY'],
         totalTracks: 1,
         genre: 'Acoustic Pop'
+      },
+      {
+        id: 'single-excuses',
+        title: 'Excuses',
+        type: 'Single',
+        releaseYear: 2020,
+        coverUrl: 'https://i.ytimg.com/vi/vX2cDW8LUWk/hqdefault.jpg',
+        trackIds: ['yt-vX2cDW8LUWk'],
+        totalTracks: 1,
+        genre: 'Punjabi Synth-Pop'
       }
     ],
     relatedArtistIds: ['karan_aujla', 'diljit_dosanjh', 'shubh', 'the_weeknd']
@@ -326,20 +327,36 @@ export const ARTISTS_DATA = [
     bannerUrl: '',
     headerColor: '#B91C1C',
     genres: ['Punjabi Rap', 'Desi Hip-Hop', 'Folk Rap', 'Gangsta Rap'],
-    topTrackIds: ['yt-n_FCrCQ6-9U', 'yt-6xoB4ZiKKn0', 'yt-GgmFC83T24Y', 'yt-ZgG-2XG_r34'],
+    topTrackIds: [
+      'yt-n_FCrCQ6-9U', // 295
+      'yt-6xoB4ZiKKn0', // The Last Ride
+      'yt-GgmFC83T24Y', // So High
+      'yt-ZgG-2XG_r34'  // Same Beef
+    ],
     albums: [
       {
         id: 'album-moosetape',
         title: 'Moosetape',
         type: 'Album',
         releaseYear: 2021,
-        coverUrl: 'https://i.ytimg.com/vi/LK7-_dgAVQE/hqdefault.jpg',
-        trackIds: ['yt-LK7-_dgAVQE'],
+        coverUrl: 'https://i.ytimg.com/vi/n_FCrCQ6-9U/hqdefault.jpg',
+        trackIds: ['yt-n_FCrCQ6-9U', 'yt-6xoB4ZiKKn0'],
         totalTracks: 32,
         genre: 'Punjabi Hip-Hop'
       }
     ],
-    singles: [],
+    singles: [
+      {
+        id: 'single-so-high',
+        title: 'So High',
+        type: 'Single',
+        releaseYear: 2017,
+        coverUrl: 'https://i.ytimg.com/vi/GgmFC83T24Y/hqdefault.jpg',
+        trackIds: ['yt-GgmFC83T24Y'],
+        totalTracks: 1,
+        genre: 'Desi Hip-Hop'
+      }
+    ],
     relatedArtistIds: ['karan_aujla', 'diljit_dosanjh', 'shubh']
   },
 
@@ -360,9 +377,7 @@ export const ARTISTS_DATA = [
     genres: ['R&B', 'Synth-Pop', 'Alternative Pop', 'Electronic'],
     topTrackIds: [
       'yt-34Na4j8AVgA', // Starboy
-      'yt-4NRXx6U8ABQ', // Blinding Lights
-      'yt-cWMxCE2HTag',
-      'yt-BddP6PYo2gs'
+      'yt-4NRXx6U8ABQ'  // Blinding Lights
     ],
     albums: [
       {
@@ -404,8 +419,8 @@ export const ARTISTS_DATA = [
     genres: ['Bollywood Romantic', 'Sufi', 'Acoustic'],
     topTrackIds: [
       'yt-iAIBF2ngbWY', // Pehle Bhi Main
-      'yt-RLzC55ai0eo',
-      'yt-BddP6PYo2gs'
+      'yt-a_V8F788-p8', // Kaise Hua
+      'yt-H2Fp18rYFJE'  // Naseeb Se
     ],
     albums: [
       {
@@ -414,7 +429,7 @@ export const ARTISTS_DATA = [
         type: 'Album',
         releaseYear: 2023,
         coverUrl: 'https://i.ytimg.com/vi/iAIBF2ngbWY/hqdefault.jpg',
-        trackIds: ['yt-iAIBF2ngbWY', 'yt-RLzC55ai0eo'],
+        trackIds: ['yt-iAIBF2ngbWY'],
         totalTracks: 8,
         genre: 'Bollywood Romantic'
       }
@@ -427,6 +442,16 @@ export const ARTISTS_DATA = [
         releaseYear: 2023,
         coverUrl: 'https://i.ytimg.com/vi/iAIBF2ngbWY/hqdefault.jpg',
         trackIds: ['yt-iAIBF2ngbWY'],
+        totalTracks: 1,
+        genre: 'Bollywood'
+      },
+      {
+        id: 'single-kaise-hua',
+        title: 'Kaise Hua',
+        type: 'Single',
+        releaseYear: 2019,
+        coverUrl: 'https://i.ytimg.com/vi/a_V8F788-p8/hqdefault.jpg',
+        trackIds: ['yt-a_V8F788-p8'],
         totalTracks: 1,
         genre: 'Bollywood'
       }
@@ -447,9 +472,8 @@ export const ARTISTS_DATA = [
     headerColor: '#D97706',
     genres: ['Desi Hip-Hop', 'Trap', 'Punjabi Rap'],
     topTrackIds: [
-      'yt-4DfVxVeqk2o',
-      'yt-LK7-_dgAVQE',
-      'yt-pXRviuL6vMY'
+      'yt-0pWsCiBvLOk', // One Love
+      'yt-4tywp83zkmk'  // Cheques
     ],
     albums: [
       {
@@ -457,13 +481,24 @@ export const ARTISTS_DATA = [
         title: 'Still Rollin',
         type: 'Album',
         releaseYear: 2023,
-        coverUrl: 'https://i.ytimg.com/vi/4DfVxVeqk2o/hqdefault.jpg',
-        trackIds: ['yt-4DfVxVeqk2o'],
+        coverUrl: 'https://i.ytimg.com/vi/4tywp83zkmk/hqdefault.jpg',
+        trackIds: ['yt-4tywp83zkmk'],
         totalTracks: 7,
         genre: 'Punjabi Hip-Hop'
       }
     ],
-    singles: [],
+    singles: [
+      {
+        id: 'single-one-love',
+        title: 'One Love',
+        type: 'Single',
+        releaseYear: 2023,
+        coverUrl: 'https://i.ytimg.com/vi/0pWsCiBvLOk/hqdefault.jpg',
+        trackIds: ['yt-0pWsCiBvLOk'],
+        totalTracks: 1,
+        genre: 'Desi Hip-Hop'
+      }
+    ],
     relatedArtistIds: ['karan_aujla', 'ap_dhillon', 'diljit_dosanjh', 'sidhu_moose_wala']
   },
 
@@ -480,10 +515,11 @@ export const ARTISTS_DATA = [
     headerColor: '#4F46E5',
     genres: ['Bollywood', 'Romantic', 'Pop Rock', 'Sufi'],
     topTrackIds: [
-      'yt-BddP6PYo2gs',
-      'yt-Bi7sSC046dk',
-      'yt-RLzC55ai0eo',
-      'yt-sK7riqg2mr4'
+      'yt-BddP6PYo2gs', // Kesariya
+      'yt-bzSTpdcs-EI', // Channa Mereya
+      'yt-pp8vbcOCm8k', // Ghar More Pardesiya
+      'yt-P8PWN1OmZOA', // Tu Jaane Na
+      'yt-BadBAMnpXSc'  // Pehli Nazar Mein
     ],
     albums: [
       {
@@ -492,7 +528,7 @@ export const ARTISTS_DATA = [
         type: 'Album',
         releaseYear: 2022,
         coverUrl: 'https://i.ytimg.com/vi/BddP6PYo2gs/hqdefault.jpg',
-        trackIds: ['yt-BddP6PYo2gs'],
+        trackIds: ['yt-BddP6PYo2gs', 'yt-bzSTpdcs-EI'],
         totalTracks: 6,
         genre: 'Bollywood'
       }
@@ -645,9 +681,7 @@ export const ARTISTS_DATA = [
       "Pop",
       "Party"
     ],
-    "topTrackIds": [
-      "yt-LK7-_dgAVQE"
-    ],
+    "topTrackIds": [],
     "albums": [],
     "singles": [],
     "relatedArtistIds": [
@@ -677,9 +711,7 @@ export const ARTISTS_DATA = [
       "Romantic",
       "Acoustic"
     ],
-    "topTrackIds": [
-      "yt-AFTIVN8rRbI"
-    ],
+    "topTrackIds": [],
     "albums": [],
     "singles": [],
     "relatedArtistIds": [
@@ -710,14 +742,11 @@ export const ARTISTS_DATA = [
       "Ghazal",
       "Playback"
     ],
-    "topTrackIds": [
-      "yt-Bi7sSC046dk"
-    ],
+    "topTrackIds": [],
     "albums": [],
     "singles": [],
     "relatedArtistIds": [
       "arijit_singh",
-      "kumar_sanu",
       "shreya_ghoshal"
     ]
   }
@@ -745,24 +774,8 @@ export const ARTISTS_DATA = [
       "Commercial Rap",
       "Punjabi Pop"
     ],
-    "topTrackIds": [
-      "yt-LK7-_dgAVQE",
-      "yt-4DfVxVeqk2o"
-    ],
-    "albums": [
-      {
-        "id": "album-glory",
-        "title": "GLORY",
-        "type": "Album",
-        "releaseYear": 2024,
-        "coverUrl": "https://i.ytimg.com/vi/LK7-_dgAVQE/hqdefault.jpg",
-        "trackIds": [
-          "yt-LK7-_dgAVQE"
-        ],
-        "totalTracks": 18,
-        "genre": "Desi Rap"
-      }
-    ],
+    "topTrackIds": [],
+    "albums": [],
     "singles": [],
     "relatedArtistIds": [
       "badshah",
@@ -793,9 +806,7 @@ export const ARTISTS_DATA = [
       "Emotional Ballad",
       "Soundtrack"
     ],
-    "topTrackIds": [
-      "yt-RLzC55ai0eo"
-    ],
+    "topTrackIds": [],
     "albums": [],
     "singles": [],
     "relatedArtistIds": [
@@ -826,10 +837,21 @@ export const ARTISTS_DATA = [
       "Bollywood"
     ],
     "topTrackIds": [
-      "yt-AFTIVN8rRbI"
+      "yt-RLzC55ai0eo" // Heeriye
     ],
     "albums": [],
-    "singles": [],
+    "singles": [
+      {
+        "id": "single-heeriye-jasleen",
+        "title": "Heeriye",
+        "type": "Single",
+        "releaseYear": 2023,
+        "coverUrl": "https://i.ytimg.com/vi/RLzC55ai0eo/hqdefault.jpg",
+        "trackIds": ["yt-RLzC55ai0eo"],
+        "totalTracks": 1,
+        "genre": "Indie Pop"
+      }
+    ],
     "relatedArtistIds": [
       "arijit_singh",
       "pritam"
@@ -859,9 +881,20 @@ export const ARTISTS_DATA = [
       "Dance"
     ],
     "topTrackIds": [
-      "yt-ElZfdU54Cp8"
+      "yt-ElZfdU54Cp8" // Apna Bana Le
     ],
-    "albums": [],
+    "albums": [
+      {
+        "id": "album-bhediya-sj",
+        "title": "Bhediya",
+        "type": "Album",
+        "releaseYear": 2022,
+        "coverUrl": "https://i.ytimg.com/vi/ElZfdU54Cp8/hqdefault.jpg",
+        "trackIds": ["yt-ElZfdU54Cp8"],
+        "totalTracks": 5,
+        "genre": "Bollywood"
+      }
+    ],
     "singles": [],
     "relatedArtistIds": [
       "arijit_singh",
@@ -891,7 +924,7 @@ export const ARTISTS_DATA = [
       "Action Score"
     ],
     "topTrackIds": [
-      "yt-sK7riqg2mr4"
+      "yt-Bi7sSC046dk" // Chaleya (Jawan)
     ],
     "albums": [
       {
@@ -899,9 +932,9 @@ export const ARTISTS_DATA = [
         "title": "Jawan",
         "type": "Album",
         "releaseYear": 2023,
-        "coverUrl": "https://i.ytimg.com/vi/sK7riqg2mr4/hqdefault.jpg",
+        "coverUrl": "https://i.ytimg.com/vi/Bi7sSC046dk/hqdefault.jpg",
         "trackIds": [
-          "yt-sK7riqg2mr4"
+          "yt-Bi7sSC046dk"
         ],
         "totalTracks": 7,
         "genre": "Action Pop"
@@ -1427,6 +1460,51 @@ export const normalizeArtistKey = (name = '') => {
 };
 
 /**
+ * Strict validator to verify that a track is performed, composed, or featured by an artist.
+ * Prevents songs from leaking into other artists' profiles.
+ */
+export const isTrackByArtist = (track, artistName, artistId = '', artistAliases = []) => {
+  if (!track || !track.artist) return false;
+
+  // 1. Direct artist_id or featured_artist_ids match
+  if (artistId && (track.artist_id === artistId || (Array.isArray(track.featured_artist_ids) && track.featured_artist_ids.includes(artistId)))) {
+    return true;
+  }
+
+  const trackArtist = track.artist.toLowerCase();
+  const target = (artistName || '').toLowerCase().trim();
+  if (!target) return false;
+
+  // 2. Break multi-artist credits into individual artist names
+  // e.g. "Karan Aujla & Ikky", "Badshah, Diljit Dosanjh & Aastha Gill", "Arijit Singh, Shilpa Rao & Anirudh"
+  const artists = trackArtist
+    .split(/[,&/|•+]|\s+ft\.?\s+|\s+feat\.?\s+/i)
+    .map((s) => s.trim())
+    .filter(Boolean);
+
+  const directMatch = artists.some((art) => {
+    if (art === target) return true;
+    if (art.includes(target)) return true;
+    // Check significant tokens with 4+ characters (e.g. "Diljit", "Aujla", "Arijit", "Moose")
+    const words = target.split(/\s+/).filter((w) => w.length >= 4);
+    return words.length > 0 && words.some((w) => art.includes(w));
+  });
+
+  if (directMatch) return true;
+
+  // 3. Check aliases
+  if (Array.isArray(artistAliases) && artistAliases.length > 0) {
+    return artistAliases.some((alias) => {
+      const a = alias.toLowerCase().trim();
+      if (a.length < 3) return false;
+      return artists.some((art) => art === a || art.includes(a));
+    });
+  }
+
+  return false;
+};
+
+/**
  * Finds or synthesizes an Artist Profile object
  * @param {string|Object} artistIdOrName 
  * @param {Array} additionalTracks - Optional live search tracks by this artist
@@ -1450,24 +1528,18 @@ export const getArtistProfile = (artistIdOrName, additionalTracks = []) => {
     );
   });
 
-  // Collect all tracks for this artist across mock catalog and additional live tracks
+  const artistName = found ? found.name : (raw.split('&')[0].split(',')[0].trim() || 'Artist');
+  const artistId = found ? found.id : cleanKey;
+  const artistAliases = found ? (found.aliases || []) : [];
+
+  // Collect strictly matching tracks for this artist across mock catalog and live tracks
   const combinedTracks = [
     ...additionalTracks,
     ...MOCK_TRACKS
   ];
 
   const artistTracks = combinedTracks.filter((t) => {
-    if (!t || !t.artist) return false;
-    if (found && (t.artist_id === found.id || (t.featured_artist_ids && t.featured_artist_ids.includes(found.id)))) {
-      return true;
-    }
-    const tArtist = t.artist.toLowerCase();
-    const searchTarget = found ? found.name.toLowerCase() : lower;
-    return (
-      tArtist.includes(searchTarget) || 
-      searchTarget.includes(tArtist) ||
-      (found && checkArtistQueryMatch(t.artist, found))
-    );
+    return isTrackByArtist(t, artistName, artistId, artistAliases);
   });
 
   // Deduplicate tracks by id or title
@@ -1481,26 +1553,38 @@ export const getArtistProfile = (artistIdOrName, additionalTracks = []) => {
   const uniqueTracks = Array.from(trackMap.values());
 
   if (found) {
-    // Resolve full track objects for top tracks
+    // Resolve full track objects for top tracks and ensure strict ownership
     const resolvedTopTracks = (found.topTrackIds || [])
       .map((id) => MOCK_TRACKS.find((t) => t.id === id))
-      .filter(Boolean);
+      .filter((t) => Boolean(t) && isTrackByArtist(t, found.name, found.id, found.aliases));
 
-    // Merge in any other tracks discovered
+    // Merge in any other strictly-matched tracks
     const finalTopTracks = [
       ...resolvedTopTracks,
       ...uniqueTracks.filter((ut) => !resolvedTopTracks.some((rt) => rt.id === ut.id))
     ];
 
-    // Resolve albums with tracks
+    // Resolve albums with tracks (strictly filtered by artist ownership)
     const resolvedAlbums = (found.albums || []).map((alb) => {
       const albTracks = (alb.trackIds || [])
         .map((tid) => MOCK_TRACKS.find((t) => t.id === tid))
-        .filter(Boolean);
+        .filter((t) => Boolean(t) && isTrackByArtist(t, found.name, found.id, found.aliases));
       return {
         ...alb,
         artist: found.name,
-        tracks: albTracks.length > 0 ? albTracks : uniqueTracks.slice(0, 3)
+        tracks: albTracks
+      };
+    });
+
+    // Resolve singles with tracks (strictly filtered by artist ownership)
+    const resolvedSingles = (found.singles || []).map((single) => {
+      const singleTracks = (single.trackIds || [])
+        .map((tid) => MOCK_TRACKS.find((t) => t.id === tid))
+        .filter((t) => Boolean(t) && isTrackByArtist(t, found.name, found.id, found.aliases));
+      return {
+        ...single,
+        artist: found.name,
+        tracks: singleTracks
       };
     });
 
@@ -1513,14 +1597,15 @@ export const getArtistProfile = (artistIdOrName, additionalTracks = []) => {
       ...found,
       topTracks: finalTopTracks,
       albums: resolvedAlbums,
+      singles: resolvedSingles,
       relatedArtists: relatedArtists.length > 0 ? relatedArtists : ARTISTS_DATA.filter((a) => a.id !== found.id).slice(0, 4)
     };
   }
 
   // 2. Dynamic profile synthesis for any searched artist (from YouTube or web search)
-  const displayName = raw.split('&')[0].split(',')[0].trim();
-  const coverTrack = uniqueTracks[0] || MOCK_TRACKS[0];
-  const dynamicAvatar = getTrackCoverUrl(coverTrack);
+  const displayName = artistName;
+  const coverTrack = uniqueTracks[0] || null;
+  const dynamicAvatar = coverTrack ? getTrackCoverUrl(coverTrack) : '';
 
   // Group tracks by album
   const albumGroups = {};
@@ -1555,20 +1640,8 @@ export const getArtistProfile = (artistIdOrName, additionalTracks = []) => {
     bannerUrl: dynamicAvatar,
     headerColor: '#1E293B',
     genres: [coverTrack?.genre || 'Popular', 'Trending'],
-    topTracks: uniqueTracks.length > 0 ? uniqueTracks : MOCK_TRACKS.slice(0, 6),
-    albums: dynamicAlbums.length > 0 ? dynamicAlbums : [
-      {
-        id: `dyn-album-1`,
-        title: `${displayName} Essentials`,
-        type: 'Album',
-        artist: displayName,
-        releaseYear: 2024,
-        coverUrl: dynamicAvatar,
-        tracks: uniqueTracks.slice(0, 5),
-        totalTracks: uniqueTracks.length || 5,
-        genre: 'Popular'
-      }
-    ],
+    topTracks: uniqueTracks,
+    albums: dynamicAlbums,
     singles: [],
     relatedArtists: ARTISTS_DATA.slice(0, 4)
   };
@@ -1594,14 +1667,15 @@ export const getAlbumData = (albumIdOrTitle, artistName = '') => {
       ) {
         const resolvedTracks = (alb.trackIds || [])
           .map((tid) => MOCK_TRACKS.find((t) => t.id === tid))
-          .filter(Boolean);
+          .filter((t) => Boolean(t) && isTrackByArtist(t, artist.name, artist.id, artist.aliases));
 
         return {
           ...alb,
           artist: artist.name,
           artistId: artist.id,
           artistAvatar: artist.avatarUrl,
-          tracks: resolvedTracks.length > 0 ? resolvedTracks : MOCK_TRACKS.slice(0, 4),
+          tracks: resolvedTracks,
+          totalTracks: resolvedTracks.length || alb.totalTracks || 1,
           moreByArtist: allReleases.filter((r) => r.id !== alb.id)
         };
       }
@@ -1644,11 +1718,11 @@ export const getAlbumData = (albumIdOrTitle, artistName = '') => {
     type: 'Album',
     artist: artistName || 'Featured Artists',
     artistId: 'featured_artists',
-    artistAvatar: 'https://i.ytimg.com/vi/BddP6PYo2gs/hqdefault.jpg',
-    coverUrl: 'https://i.ytimg.com/vi/BddP6PYo2gs/hqdefault.jpg',
+    artistAvatar: '',
+    coverUrl: '',
     releaseYear: 2024,
-    tracks: MOCK_TRACKS.slice(0, 5),
-    totalTracks: 5,
+    tracks: [],
+    totalTracks: 0,
     genre: 'Soundtrack',
     moreByArtist: []
   };
