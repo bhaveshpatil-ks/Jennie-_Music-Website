@@ -188,6 +188,25 @@ export const PrivacyPolicy = () => {
             </p>
           </div>
         </div>
+
+        {/* Item D: Help & Feedback Submissions */}
+        <div className="p-5 rounded-2xl bg-[#141414] border border-white/10 space-y-3">
+          <div className="flex items-center gap-2.5 text-white">
+            <ShieldCheck size={18} className="text-zinc-400" />
+            <h3 className="text-base font-semibold">D. Help, Feedback &amp; Abuse Complaints (Diagnostics &amp; Support)</h3>
+          </div>
+          <div className="space-y-1.5 text-xs text-neutral-300 leading-relaxed">
+            <p>
+              <strong className="text-white">What we collect:</strong> When you submit a bug report, playback problem, feature recommendation, or abuse complaint via our Help &amp; Feedback center, we receive your contact email, description of the problem, optional screenshots, and diagnostic metadata (application version 0.1.0, operating system / browser type, and the relevant song ID if initiated from the player).
+            </p>
+            <p>
+              <strong className="text-white">Why we process it:</strong> Exclusively for investigating playback errors, debugging software flaws, mitigating inappropriate or copyright-infringing content under app store standards, and replying to your ticket.
+            </p>
+            <p>
+              <strong className="text-white">Data minimization:</strong> We strictly avoid collecting invasive telemetry (such as GPS, precise location, contacts, or device serial numbers). Feedback tickets and abuse logs are reviewed manually by support engineering and never sold or used for ad targeting.
+            </p>
+          </div>
+        </div>
       </section>
 
       {/* Section 3: Data Processing Comparison Table */}
@@ -217,6 +236,11 @@ export const PrivacyPolicy = () => {
                 <td className="p-3.5 font-semibold text-white">Custom Playlists &amp; Likes</td>
                 <td className="p-3.5">Stored in your browser&apos;s localStorage and synced to your secure user account for seamless playback.</td>
                 <td className="p-3.5 text-red-300/90">Never monetized, never shared with data brokers.</td>
+              </tr>
+              <tr>
+                <td className="p-3.5 font-semibold text-white">Feedback &amp; Issue Reports</td>
+                <td className="p-3.5">Used strictly by engineering to debug playback failures, track bugs, and investigate content safety complaints.</td>
+                <td className="p-3.5 text-red-300/90">Never sold, never used for ad tracking, never shared with commercial brokers. Zero invasive telemetry.</td>
               </tr>
               <tr>
                 <td className="p-3.5 font-semibold text-white">IP Address &amp; Session Logs</td>
