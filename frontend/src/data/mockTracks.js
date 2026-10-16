@@ -1712,11 +1712,11 @@ export const FEATURED_MIXES = [
       'yt-BddP6PYo2gs', // Kesariya
       'yt-n_FCrCQ6-9U', // 295
       'yt-iAIBF2ngbWY', // Pehle Bhi Main
-      'yt-LK7-_dgAVQE', // Softly
+      'yt-LK7-_dgAVQE', // Tauba Tauba
       'yt-SAcpESN_Fk4', // Dil Diyan Gallan
       'yt-3A-xVp-sW_4', // Sunn Raha Hai
       'yt-4tywp83zkmk', // Cheques
-      'yt-cl0a3i2wFcc'  // Lover
+      'yt-cl0a3i2wFcc'  // G.O.A.T.
     ],
     followers: '2,480,000',
     accentColor: '#1DB954'
@@ -1727,7 +1727,7 @@ export const FEATURED_MIXES = [
     description: 'Catchiest Bollywood film soundtracks and Hindi pop chartbusters.',
     coverUrl: 'https://i.ytimg.com/vi/zRtPUIumXcY/hqdefault.jpg',
     trackIds: [
-      'yt-RLzC55ai0eo', // Satranga
+      'yt-HrnrqYxYrbk', // Satranga
       'yt-zRtPUIumXcY', // Deewani Mastani
       'yt-Il4wSflh4a4', // Tere Sang Yaara
       'yt-a_V8F788-p8', // Kaise Hua
@@ -1745,9 +1745,9 @@ export const FEATURED_MIXES = [
     trackIds: [
       'yt-6xoB4ZiKKn0', // The Last Ride
       'yt-vsWxs1tuwDk', // Winning Speech
-      'yt-4DfVxVeqk2o', // Born to Shine
+      'yt-4DfVxVeqk2o', // 52 Bars
       'yt-VNs_cCtdbPc', // Brown Munde
-      'yt-HrnrqYxYrbk', // No Love
+      'yt-0pWsCiBvLOk', // One Love
       'yt-GgmFC83T24Y'  // So High
     ],
     followers: '1,420,000',
@@ -1759,12 +1759,12 @@ export const FEATURED_MIXES = [
     description: 'The ultimate Hindi cinema playlist: blockbuster romance and timeless melodies.',
     coverUrl: 'https://i.ytimg.com/vi/Bi7sSC046dk/hqdefault.jpg',
     trackIds: [
-      'yt-Bi7sSC046dk', // Tum Se Hi
+      'yt-Bi7sSC046dk', // Chaleya
       'yt-pp8vbcOCm8k', // Ghar More Pardesiya
       'yt-BadBAMnpXSc', // Pehli Nazar Mein
       'yt-PQmrmVs10X8', // Chaiyya Chaiyya
       'yt-Vn_Vhycfhrc', // Teri Ore
-      'yt-cWMxCE2HTag'  // Channa Mereya
+      'yt-bzSTpdcs-EI'  // Channa Mereya
     ],
     followers: '960,000',
     accentColor: '#F59E0B'
@@ -1791,11 +1791,11 @@ export const FEATURED_MIXES = [
     description: 'The hottest tracks trending across social feeds and reels in India.',
     coverUrl: 'https://i.ytimg.com/vi/0pWsCiBvLOk/hqdefault.jpg',
     trackIds: [
-      'yt-0pWsCiBvLOk', // Tauba Tauba
+      'yt-LK7-_dgAVQE', // Tauba Tauba
       'yt-Dmm_s6O_t7o', // Jugnu
       'yt-p4oX1lqA8U8', // Kinni Kinni
       'yt-vX2cDW8LUWk', // Excuses
-      'yt-F5S6ALIxyik', // Elevated
+      'yt-F5S6ALIxyik', // Tu Hai Kahan
       'yt-SD4Z8dlZPd8'  // Genda Phool
     ],
     followers: '780,000',
