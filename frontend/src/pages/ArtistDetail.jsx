@@ -210,7 +210,13 @@ export const ArtistDetail = ({ artist }) => {
         <div className="space-y-4">
           <h2 className="text-2xl font-bold text-white tracking-tight">Popular</h2>
           
-          <div className="space-y-1">
+          {visibleTracks.length === 0 ? (
+            <div className="py-8 px-6 text-center text-neutral-400 bg-white/[0.02] border border-white/5 rounded-2xl">
+              <p className="text-sm font-medium text-neutral-300">No tracks cataloged yet for {artist.name}.</p>
+              <p className="text-xs text-neutral-500 mt-1">Use the search bar above to find and stream live tracks by {artist.name}.</p>
+            </div>
+          ) : (
+            <div className="space-y-1">
             {visibleTracks.map((track, idx) => {
               const isCurrent = currentTrack?.id === track.id;
               const isCurrentTrackPlaying = isCurrent && isPlaying;
@@ -312,6 +318,7 @@ export const ArtistDetail = ({ artist }) => {
               );
             })}
           </div>
+          )}
 
           {topTracks.length > 5 && (
             <button
