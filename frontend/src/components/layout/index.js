@@ -3,3 +3,4 @@ export { TopHeader } from './TopHeader';
 export { Sidebar } from './Sidebar';
 export { MobileNav } from './MobileNav';
 export { Footer } from './Footer';
+export { UserProfileDrawer } from './UserProfileDrawer';
