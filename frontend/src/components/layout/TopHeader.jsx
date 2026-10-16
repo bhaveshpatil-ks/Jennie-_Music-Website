@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Search, Sparkles, User, Music2, Shield, LogOut, Mail, CheckCircle2, Trash2, Sliders } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Search, Download, Sparkles, User, Music2, Shield, LogOut, Mail, CheckCircle2, Trash2, Sliders, HelpCircle } from 'lucide-react';
 import { useLibraryStore } from '../../store/useLibraryStore';
 import { usePlayerStore } from '../../store/usePlayerStore';
 import { useAuthStore } from '../../store/useAuthStore';
+import { UserProfileDrawer } from './UserProfileDrawer';
+import { isStandaloneApp } from '../../services/nativeBridge';
 
 export const TopHeader = () => {
   const activeView = useLibraryStore((state) => state.activeView);
@@ -14,19 +16,12 @@ export const TopHeader = () => {
   const isPlaying = usePlayerStore((state) => state.isPlaying);
   const toggleFullscreen = usePlayerStore((state) => state.toggleFullscreen);
 
-  const { user, profile, openAuthModal, logout } = useAuthStore();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const menuRef = useRef(null);
+  const { user, profile, openAuthModal } = useAuthStore();
+  const [isProfileDrawerOpen, setIsProfileDrawerOpen] = useState(false);
+  const [isApp, setIsApp] = useState(false);
 
-  // Close dropdown on outside click
   useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setIsMenuOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    setIsApp(isStandaloneApp());
   }, []);
 
   const handleSearchFocus = () => {
@@ -41,40 +36,60 @@ export const TopHeader = () => {
       case 'search': return 'Search';
       case 'library': return 'Your Library';
       case 'favorites': return 'Liked Songs';
+      case 'download': return 'Download App';
       case 'privacy': return 'Privacy Policy';
       case 'terms': return 'Terms & Conditions';
       case 'cookies': return 'Cookie Policy';
       case 'refund': return 'Refund Policy';
       case 'business': return 'Business Details';
+      case 'feedback': return 'Help & Feedback';
       default: return 'Jennie Music';
     }
   };
 
-  const displayName = profile?.username || user?.displayName || user?.email?.split('@')[0] || 'User';
-  const initial = displayName.charAt(0).toUpperCase();
+  const displayName = profile?.username || user?.displayName || user?.email?.split('@')[0] || 'Bhavesh';
+  const initial = (displayName.charAt(0) || 'B').toUpperCase();
 
   return (
     <header className="sticky top-0 z-30 flex items-center justify-between gap-3 px-4 md:px-8 py-3 bg-[#0A0A0A]/90 backdrop-blur-xl border-b border-white/[0.06]">
-      {/* Mobile Branding */}
-      <div 
-        onClick={() => setActiveView('home')}
-        role="button"
-        tabIndex={0}
-        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setActiveView('home'); }}
-        className="flex md:hidden items-center gap-2 cursor-pointer focus-visible:outline-none"
-        aria-label="Jennie Music Home"
-      >
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-neutral-800 to-neutral-700 flex items-center justify-center shadow-md">
-          <Music2 size={16} className="text-white" aria-hidden="true" />
+      {/* Mobile Profile Avatar & Branding */}
+      <div className="flex md:hidden items-center gap-2.5">
+        <button
+          type="button"
+          onClick={() => setIsProfileDrawerOpen(true)}
+          aria-label="Open profile menu"
+          className="w-8 h-8 rounded-full bg-gradient-to-tr from-emerald-600 via-teal-600 to-cyan-700 text-white font-bold text-sm flex items-center justify-center shadow-md border border-white/20 hover:scale-105 active:scale-95 transition-transform"
+          title="Account & Profile"
+        >
+          {initial}
+        </button>
+        <div 
+          onClick={() => setActiveView('home')}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setActiveView('home'); }}
+          className="flex items-center gap-1.5 cursor-pointer focus-visible:outline-none"
+          aria-label="Jennie Music Home"
+        >
+          <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-neutral-800 to-neutral-700 flex items-center justify-center shadow-md">
+            <Music2 size={14} className="text-white" aria-hidden="true" />
+          </div>
+          <span className="text-base font-bold tracking-tight text-white font-serif">Jennie</span>
         </div>
-        <span className="text-base font-bold tracking-tight text-white font-serif">Jennie</span>
       </div>
 
       {/* Desktop Navigation History Controls */}
       <div className="hidden md:flex items-center gap-2">
         <button
           type="button"
-          onClick={() => window.history.back()}
+          onClick={() => {
+            try {
+              if (window.history.length > 1) window.history.back();
+              else useLibraryStore.getState().setActiveView('home');
+            } catch (_) {
+              useLibraryStore.getState().setActiveView('home');
+            }
+          }}
           aria-label="Go back in browsing history"
           className="w-8 h-8 rounded-full bg-[#181818] flex items-center justify-center text-neutral-400 hover:text-white hover:bg-[#222222] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
           title="Go Back"
@@ -83,7 +98,11 @@ export const TopHeader = () => {
         </button>
         <button
           type="button"
-          onClick={() => window.history.forward()}
+          onClick={() => {
+            try {
+              window.history.forward();
+            } catch (_) {}
+          }}
           aria-label="Go forward in browsing history"
           className="w-8 h-8 rounded-full bg-[#181818] flex items-center justify-center text-neutral-400 hover:text-white hover:bg-[#222222] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
           title="Go Forward"
@@ -136,10 +155,23 @@ export const TopHeader = () => {
           </button>
         )}
 
-        <div className="hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#181818] border border-white/5 text-neutral-300 text-[11px] md:text-xs font-semibold">
-          <Sparkles size={12} className="text-zinc-400" aria-hidden="true" />
-          <span>Jennie Cloud</span>
-        </div>
+        {!isApp && (
+          <a
+            href="/download"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Download Jennie App for Android and Windows (opens in a new page)"
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] md:text-xs font-semibold transition-all cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-95 border ${
+              activeView === 'download'
+                ? 'bg-white text-black border-white shadow-sm font-bold'
+                : 'bg-[#181818] hover:bg-[#222225] text-neutral-200 hover:text-white border-white/10 hover:border-white/20'
+            }`}
+            title="Download Jennie App for Android and Windows (opens in a new page)"
+          >
+            <Download size={13} className={activeView === 'download' ? 'text-black' : 'text-neutral-300'} aria-hidden="true" />
+            <span>Download App</span>
+          </a>
+        )}
 
         {/* User Auth Section (Desktop only - mobile uses dedicated bottom nav) */}
         {!user ? (
@@ -161,121 +193,30 @@ export const TopHeader = () => {
             </button>
           </div>
         ) : (
-          <div className="relative hidden md:block" ref={menuRef}>
+          <div className="hidden md:block">
             <button
               type="button"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              onClick={() => setIsProfileDrawerOpen(true)}
               aria-label="User Account Menu"
               className="flex items-center gap-2 p-1 pl-2 pr-2.5 rounded-full bg-[#181818] hover:bg-[#222222] border border-zinc-800 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400"
+              title="Open Account Menu"
             >
-              <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-zinc-700 via-zinc-800 to-zinc-900 text-white font-bold text-xs flex items-center justify-center border border-zinc-600 shadow-sm">
+              <div className="w-6 h-6 rounded-full bg-gradient-to-tr from-emerald-600 via-teal-600 to-cyan-700 text-white font-bold text-xs flex items-center justify-center border border-zinc-600 shadow-sm">
                 {initial}
               </div>
               <span className="text-xs font-medium text-white max-w-[90px] truncate hidden sm:inline">
                 {displayName}
               </span>
             </button>
-
-            {/* Account Popover Menu */}
-            {isMenuOpen && (
-              <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-[#121214] border border-zinc-800 shadow-2xl p-3 z-50 animate-fadeIn">
-                <div className="px-3 py-2 border-b border-zinc-800/80">
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-zinc-700 via-zinc-800 to-zinc-900 text-white font-bold text-sm flex items-center justify-center border border-zinc-600 shadow-sm">
-                      {initial}
-                    </div>
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-white truncate">{displayName}</p>
-                      <p className="text-[11px] text-white/50 truncate">{user.email}</p>
-                    </div>
-                  </div>
-
-                  {/* Badges */}
-                  <div className="mt-2.5 flex items-center gap-1.5 flex-wrap">
-                    {profile?.age_bracket && (
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-white/5 text-neutral-300 border border-white/10">
-                        {profile.age_bracket} Tier
-                      </span>
-                    )}
-                    {profile?.is_minor ? (
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-300 border border-amber-500/20 flex items-center gap-1">
-                        <Shield size={10} /> Safe Mode
-                      </span>
-                    ) : (
-                      <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
-                        <CheckCircle2 size={10} /> Full Fidelity
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Menu items */}
-                <div className="py-1 space-y-0.5 text-xs">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      setActiveView('settings');
-                    }}
-                    className="w-full text-left px-3 py-2 rounded-lg text-white font-medium hover:bg-white/10 transition-colors flex items-center gap-2"
-                  >
-                    <Sliders size={14} className="text-zinc-300" />
-                    <span>Settings &amp; Audio Quality</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      setActiveView('settings');
-                    }}
-                    className="w-full text-left px-3 py-2 rounded-lg text-white/80 hover:text-white hover:bg-white/5 transition-colors flex items-center gap-2"
-                  >
-                    <User size={14} className="text-zinc-300" />
-                    <span>Edit Profile &amp; Details</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      setActiveView('business');
-                    }}
-                    className="w-full text-left px-3 py-2 rounded-lg text-white/70 hover:text-white hover:bg-white/5 transition-colors flex items-center gap-2"
-                  >
-                    <Shield size={14} />
-                    <span>Account &amp; Operator Details</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      openAuthModal('delete_account_confirm');
-                    }}
-                    className="w-full text-left px-3 py-2 rounded-lg text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors flex items-center gap-2"
-                  >
-                    <Trash2 size={14} />
-                    <span>Delete Account Permanently</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsMenuOpen(false);
-                      logout();
-                    }}
-                    className="w-full text-left px-3 py-2 rounded-lg text-white/60 hover:text-white hover:bg-white/5 transition-colors flex items-center gap-2 border-t border-white/5 mt-1 pt-2"
-                  >
-                    <LogOut size={14} />
-                    <span>Sign Out</span>
-                  </button>
-                </div>
-              </div>
-            )}
           </div>
         )}
       </div>
+
+      {/* User Profile Side Drawer from Sketch 3 */}
+      <UserProfileDrawer 
+        isOpen={isProfileDrawerOpen} 
+        onClose={() => setIsProfileDrawerOpen(false)} 
+      />
     </header>
   );
 };
