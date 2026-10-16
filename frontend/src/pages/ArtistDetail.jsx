@@ -8,7 +8,7 @@ import {
   Disc, 
   Share2, 
   ChevronRight, 
-  Sparkles,
+  CheckCircle,
   Music2,
   Clock,
   ListPlus,
@@ -99,33 +99,40 @@ export const ArtistDetail = ({ artist }) => {
 
   return (
     <div className="space-y-8 pb-28 -mx-4 sm:-mx-6 -mt-6">
-      {/* ─── SPOTIFY-STYLE HERO BANNER ────────────────────────────────────────── */}
-      <div className="relative min-h-[340px] md:min-h-[400px] flex flex-col justify-end p-6 md:p-10 overflow-hidden bg-gradient-to-b from-[#1c1c24] to-[#0A0A0C]">
-        {/* Background Image with Dark Vignette */}
+      {/* ─── ARCHITECTURAL HERO BANNER ────────────────────────────────────────── */}
+      <div className="relative min-h-[280px] md:min-h-[340px] flex flex-col justify-end p-6 md:p-10 overflow-hidden bg-gradient-to-br from-[#18181F] via-[#101014] to-[#0A0A0C] border-b border-white/[0.06]">
+        {/* Subtle architectural radial illumination */}
         <div 
-          className="absolute inset-0 bg-cover bg-center opacity-45 scale-105 transition-transform duration-1000"
-          style={{ 
-            backgroundImage: `url(${artist.bannerUrl || artist.avatarUrl})`,
-            filter: 'brightness(0.7) contrast(1.1)' 
-          }}
+          className="absolute -top-24 -right-24 w-96 h-96 rounded-full opacity-20 blur-3xl pointer-events-none"
+          style={{ backgroundColor: artist.headerColor || '#3B82F6' }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0C] via-[#0A0A0C]/60 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0C]/80 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0C] via-transparent to-transparent" />
 
         {/* Hero Content */}
-        <div className="relative z-10 max-w-4xl space-y-3">
-          {/* Verified Badge */}
-          {artist.verified && (
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs font-semibold backdrop-blur-md">
-              <Sparkles size={13} className="text-blue-400" />
-              <span>Verified Artist</span>
+        <div className="relative z-10 max-w-4xl space-y-4">
+          <div className="flex items-center gap-4 sm:gap-6">
+            {/* Minimalist Monogram Badge instead of fake stock photo */}
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-neutral-800 to-neutral-900 border border-white/10 flex items-center justify-center shadow-2xl flex-shrink-0 select-none">
+              <span className="text-xl sm:text-2xl font-black text-white tracking-wider">
+                {(artist.name || 'Artist').split(' ').filter(Boolean).map(n => n[0]).slice(0, 2).join('').toUpperCase()}
+              </span>
             </div>
-          )}
 
-          {/* Artist Name */}
-          <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black text-white tracking-tight leading-none drop-shadow-2xl">
-            {artist.name}
-          </h1>
+            <div className="space-y-1.5 min-w-0">
+              {/* Verified Badge */}
+              {artist.verified && (
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-500/15 border border-blue-400/30 text-blue-300 text-xs font-semibold backdrop-blur-md">
+                  <CheckCircle size={13} className="text-blue-400" />
+                  <span>Verified Artist</span>
+                </div>
+              )}
+
+              {/* Artist Name */}
+              <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-white tracking-tight leading-none truncate">
+                {artist.name}
+              </h1>
+            </div>
+          </div>
 
           {/* Stats & Genres */}
           <div className="flex flex-wrap items-center gap-3 text-sm text-neutral-300 font-medium pt-1">
@@ -399,14 +406,9 @@ export const ArtistDetail = ({ artist }) => {
               onClick={handleShare}
               role="button"
               tabIndex={0}
-              className="relative rounded-3xl overflow-hidden p-8 md:p-10 bg-cover bg-center cursor-pointer group shadow-2xl border border-white/10"
-              style={{
-                backgroundImage: `url(${artist.avatarUrl || artist.bannerUrl})`,
-                minHeight: '280px'
-              }}
+              className="relative rounded-3xl overflow-hidden p-8 md:p-10 bg-gradient-to-br from-[#16161A] to-[#0E0E12] cursor-pointer group shadow-2xl border border-white/10"
+              style={{ minHeight: '220px' }}
             >
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-black/40 backdrop-blur-[2px] group-hover:backdrop-blur-none transition-all duration-500" />
-              
               <div className="relative z-10 max-w-2xl space-y-3">
                 <span className="text-3xl font-black text-white block">
                   {artist.monthlyListeners || '12,500,000'} monthly listeners
@@ -441,15 +443,12 @@ export const ArtistDetail = ({ artist }) => {
                       openArtist(related);
                     }
                   }}
-                  className="group p-4 rounded-2xl bg-[#141416] hover:bg-[#1A1A1E] transition-all duration-300 cursor-pointer border border-white/[0.05] hover:border-white/15 flex flex-col items-center text-center"
+                  className="group p-4 rounded-2xl bg-[#141416] hover:bg-[#1A1A1E] transition-all duration-300 cursor-pointer border border-white/[0.05] hover:border-white/15 flex flex-col items-center text-center select-none"
                 >
-                  <div className="relative w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden mb-3 shadow-xl bg-neutral-900">
-                    <img
-                      src={related.avatarUrl}
-                      alt={related.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      loading="lazy"
-                    />
+                  <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-full overflow-hidden mb-3 shadow-xl bg-gradient-to-br from-neutral-800 to-neutral-900 border border-white/10 flex items-center justify-center group-hover:border-white/30 transition-all duration-300">
+                    <span className="text-lg sm:text-xl font-bold tracking-wider text-neutral-200 group-hover:text-white">
+                      {(related.name || 'Artist').split(' ').filter(Boolean).map(n => n[0]).slice(0, 2).join('').toUpperCase()}
+                    </span>
                   </div>
                   <h4 className="text-sm font-bold text-white truncate w-full group-hover:text-white">
                     {related.name}
