@@ -16,6 +16,7 @@
  */
 
 import { MOCK_TRACKS } from '../data/mockTracks.js';
+import { isTrackUnplayable } from './unplayableTracksRegistry.js';
 
 /**
  * Normalizes artist identifier
@@ -86,6 +87,12 @@ export function getStructuredProfile(track) {
  */
 export function isEligibleOfficialTrack(track) {
   if (!track || !track.id) return false;
+  
+  // Exclude tracks marked unplayable by YouTube embed restriction (100, 101, 150, 153)
+  if (track.playable === false || isTrackUnplayable(track.id) || isTrackUnplayable(track.youtubeId)) {
+    return false;
+  }
+
   const title = (track.title || '').toLowerCase();
   
   // Exclude unwanted content types

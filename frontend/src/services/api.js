@@ -1,12 +1,7 @@
 import { MOCK_TRACKS } from '../data/mockTracks';
 
-// Cloak backend origins behind relative '/api' reverse-proxy on dev & platforms with proxy support (Vercel/Netlify),
-// and auto-fallback to live Railway backend when hosted on static services like GitHub Pages (*.github.io).
-const isStaticGitHubPages = typeof window !== 'undefined' && window.location.hostname.endsWith('github.io');
-const API_BASE_URL = (
-  import.meta.env.VITE_API_URL ||
-  (isStaticGitHubPages ? 'https://jennie-your-2nd-love-music-app-production.up.railway.app/api' : '/api')
-).replace(/\/+$/, '');
+// API base URL configured via environment variables (reverse-proxied via /api by default)
+const API_BASE_URL = (import.meta.env.VITE_API_URL || '/api').replace(/\/+$/, '');
 
 /**
  * Safe fetch helper with automatic fallback to mock data and security headers
