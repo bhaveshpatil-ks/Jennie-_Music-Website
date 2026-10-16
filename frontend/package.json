@@ -11,6 +11,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@capacitor/app": "^8.1.1",
+    "@capacitor/core": "^8.5.2",
+    "@capacitor/haptics": "^8.0.2",
+    "@capacitor/status-bar": "^8.0.3",
     "clsx": "^2.1.1",
     "firebase": "^12.19.0",
     "lenis": "^1.3.26",
