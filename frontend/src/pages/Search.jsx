@@ -8,7 +8,7 @@ import {
   Clock, 
   Trash2, 
   Music, 
-  Sparkles,
+  CheckCircle,
   User,
   ChevronRight
 } from 'lucide-react';
@@ -466,12 +466,18 @@ export const Search = () => {
                       className="group relative p-6 rounded-2xl bg-[#141416] hover:bg-[#1A1A1E] transition-all duration-300 cursor-pointer border border-white/[0.06] hover:border-white/15 shadow-xl flex flex-col justify-between flex-grow"
                     >
                       <div>
-                        <div className="relative w-28 h-28 rounded-full overflow-hidden shadow-2xl mb-4 bg-neutral-900">
-                          <img
-                            src={topArtist.avatarUrl}
-                            alt={topArtist.name}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          />
+                        <div className="relative w-28 h-28 rounded-full overflow-hidden shadow-2xl mb-4 bg-gradient-to-br from-neutral-800 to-neutral-900 border border-white/10 flex items-center justify-center select-none">
+                          {topArtist.avatarUrl ? (
+                            <img
+                              src={topArtist.avatarUrl}
+                              alt={topArtist.name}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            />
+                          ) : (
+                            <span className="text-3xl font-black text-white tracking-wider">
+                              {(topArtist.name || 'Artist').split(' ').filter(Boolean).map(n => n[0]).slice(0, 2).join('').toUpperCase()}
+                            </span>
+                          )}
                         </div>
                         <h4 className="text-2xl font-black text-white tracking-tight leading-tight">
                           {topArtist.name}
@@ -482,7 +488,7 @@ export const Search = () => {
                           </span>
                           {topArtist.verified && (
                             <span className="text-xs text-blue-400 flex items-center gap-1 font-semibold">
-                              <Sparkles size={11} /> Verified
+                              <CheckCircle size={11} /> Verified
                             </span>
                           )}
                         </div>
@@ -647,12 +653,18 @@ export const Search = () => {
                         }}
                         className="group p-4 rounded-2xl bg-[#141416] hover:bg-[#1A1A1E] transition-all duration-300 cursor-pointer border border-white/[0.05] hover:border-white/15 flex flex-col items-center text-center relative"
                       >
-                        <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden mb-3 shadow-lg bg-neutral-900">
-                          <img
-                            src={artist.avatarUrl}
-                            alt={artist.name}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          />
+                        <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden mb-3 shadow-lg bg-gradient-to-br from-neutral-800 to-neutral-900 border border-white/10 flex items-center justify-center select-none">
+                          {artist.avatarUrl ? (
+                            <img
+                              src={artist.avatarUrl}
+                              alt={artist.name}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            />
+                          ) : (
+                            <span className="text-xl sm:text-2xl font-black text-white tracking-wider">
+                              {(artist.name || 'Artist').split(' ').filter(Boolean).map(n => n[0]).slice(0, 2).join('').toUpperCase()}
+                            </span>
+                          )}
                           <button
                             type="button"
                             onClick={(e) => {
