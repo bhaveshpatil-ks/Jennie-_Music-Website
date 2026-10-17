@@ -92,6 +92,19 @@ const syncMediaSession = (track, isPlaying) => {
   } catch (_) {}
 };
 
+const syncMediaPosition = (currentTime, duration) => {
+  if (typeof window === 'undefined' || !('mediaSession' in navigator) || !navigator.mediaSession.setPositionState) return;
+  try {
+    const validDuration = typeof duration === 'number' && duration > 0 ? duration : 180;
+    const validPos = Math.max(0, Math.min(currentTime || 0, validDuration));
+    navigator.mediaSession.setPositionState({
+      duration: validDuration,
+      playbackRate: 1,
+      position: validPos,
+    });
+  } catch (_) {}
+};
+
 export const usePlayerStore = create((set, get) => {
   let tickerInterval = null;
 
@@ -107,13 +120,13 @@ export const usePlayerStore = create((set, get) => {
       const ytTime = state.ytController?.getCurrentTime?.();
       if (typeof ytTime === 'number' && !isNaN(ytTime) && ytTime > 0) {
         const ytDuration = state.ytController?.getDuration?.();
+        const cur = Math.floor(ytTime);
+        const dur = typeof ytDuration === 'number' && ytDuration > 0 ? Math.floor(ytDuration) : state.duration;
         set({
-          currentTime: Math.floor(ytTime),
-          duration:
-            typeof ytDuration === 'number' && ytDuration > 0
-              ? Math.floor(ytDuration)
-              : state.duration,
+          currentTime: cur,
+          duration: dur,
         });
+        syncMediaPosition(cur, dur);
         return;
       }
 
@@ -124,10 +137,13 @@ export const usePlayerStore = create((set, get) => {
         !isNaN(globalAudio.currentTime) &&
         globalAudio.currentTime > 0
       ) {
+        const cur = Math.floor(globalAudio.currentTime);
+        const dur = Math.floor(globalAudio.duration) || state.duration;
         set({
-          currentTime: Math.floor(globalAudio.currentTime),
-          duration: Math.floor(globalAudio.duration) || state.duration,
+          currentTime: cur,
+          duration: dur,
         });
+        syncMediaPosition(cur, dur);
         return;
       }
 
@@ -143,6 +159,7 @@ export const usePlayerStore = create((set, get) => {
         }
       } else {
         set({ currentTime: nextTime });
+        syncMediaPosition(nextTime, trackDuration);
       }
     }, 1000);
   };
@@ -786,5 +803,35 @@ if (typeof window !== 'undefined' && 'mediaSession' in navigator) {
         usePlayerStore.getState().seekTo(details.seekTime);
       }
     });
+    navigator.mediaSession.setActionHandler('seekforward', (details) => {
+      const { currentTime, duration, seekTo } = usePlayerStore.getState();
+      seekTo(Math.min(duration || 180, currentTime + (details.seekOffset || 10)));
+    });
+    navigator.mediaSession.setActionHandler('seekbackward', (details) => {
+      const { currentTime, seekTo } = usePlayerStore.getState();
+      seekTo(Math.max(0, currentTime - (details.seekOffset || 10)));
+    });
+    navigator.mediaSession.setActionHandler('stop', () => {
+      usePlayerStore.getState().pause();
+    });
   } catch (_) {}
+}
+
+// Background & Offscreen visibility change listener
+// Ensures seamless background playback when the screen is locked or tab is hidden
+if (typeof document !== 'undefined') {
+  document.addEventListener('visibilitychange', () => {
+    try {
+      const store = usePlayerStore.getState();
+      if (store.isPlaying && store.currentTrack) {
+        startSilentCarrier();
+        if (globalAudio && store.currentTrack?.audioUrl && globalAudio.paused) {
+          globalAudio.play().catch(() => {});
+        }
+        if (store.ytController && (store.currentTrack?.source === 'youtube' || store.currentTrack?.youtubeId)) {
+          store.ytController.play();
+        }
+      }
+    } catch (_) {}
+  });
 }
