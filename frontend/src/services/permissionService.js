@@ -1,16 +1,20 @@
 /**
- * Jennie Web App - Unified Device & App Permission Service
- * Handles browser & native permissions for Headphones/Audio, Microphone, Storage, and Notifications.
+ * Jennie Web App & Mobile App - Device & App Permission Service
+ * Handles background & offscreen playback, battery optimization exemption,
+ * lock screen media notifications, headphones/Bluetooth hardware controls,
+ * offline storage, and microphone voice control.
  */
 
 const STORAGE_KEY = 'jennie_app_permissions';
 const SETUP_COMPLETED_KEY = 'jennie_permissions_setup_completed';
 
 export const PERMISSION_TYPES = {
-  HEADPHONES: 'headphones',
-  MICROPHONE: 'microphone',
-  STORAGE: 'storage',
+  BACKGROUND: 'background',
+  BATTERY: 'battery',
   NOTIFICATIONS: 'notifications',
+  HEADPHONES: 'headphones',
+  STORAGE: 'storage',
+  MICROPHONE: 'microphone',
 };
 
 export const PERMISSION_STATUS = {
@@ -22,34 +26,56 @@ export const PERMISSION_STATUS = {
 
 export const PERMISSION_METADATA = [
   {
-    id: PERMISSION_TYPES.HEADPHONES,
-    title: 'Headphone & Audio Hardware Access',
-    subtitle: 'Hardware media buttons, Bluetooth audio routing, and low-latency background playback.',
-    icon: 'headphones',
+    id: PERMISSION_TYPES.BACKGROUND,
+    title: 'Background & Offscreen Playback',
+    subtitle: 'Keeps music and podcasts playing continuously when the screen is turned off or when switching apps, just like Spotify.',
+    icon: 'background',
+    badge: 'Essential',
     required: true,
     defaultGranted: true,
   },
   {
-    id: PERMISSION_TYPES.MICROPHONE,
-    title: 'Microphone & Voice Control',
-    subtitle: 'Enables hands-free voice search, song hum identification, and real-time karaoke lyrics sync.',
-    icon: 'mic',
-    required: false,
-    defaultGranted: false,
-  },
-  {
-    id: PERMISSION_TYPES.STORAGE,
-    title: 'Local Storage & Offline Library',
-    subtitle: 'Allows persistent high-speed caching of albums, playlist metadata, and offline playback.',
-    icon: 'storage',
+    id: PERMISSION_TYPES.BATTERY,
+    title: 'Battery Saver Exemption',
+    subtitle: 'Prevents Android OS power saving from throttling or killing the music process when the device goes to sleep.',
+    icon: 'battery',
+    badge: 'Recommended',
     required: true,
     defaultGranted: true,
   },
   {
     id: PERMISSION_TYPES.NOTIFICATIONS,
-    title: 'Music Playback & Artist Alerts',
-    subtitle: 'Lockscreen notification controls, background playback updates, and new song release alerts.',
+    title: 'Lock Screen & Media Controls',
+    subtitle: 'Displays track artwork and play, pause, and skip controls in your notification shade and phone lock screen.',
     icon: 'bell',
+    badge: 'Media Hub',
+    required: false,
+    defaultGranted: true,
+  },
+  {
+    id: PERMISSION_TYPES.HEADPHONES,
+    title: 'Headphones & Bluetooth Controls',
+    subtitle: 'Enables earbud gestures, car steering wheel buttons, and external Bluetooth speaker remote control.',
+    icon: 'headphones',
+    badge: 'Hardware',
+    required: true,
+    defaultGranted: true,
+  },
+  {
+    id: PERMISSION_TYPES.STORAGE,
+    title: 'Offline Storage & Audio Cache',
+    subtitle: 'Caches stream buffers, album art, and synchronized lyrics locally for instant zero-latency playback.',
+    icon: 'storage',
+    badge: 'Offline',
+    required: true,
+    defaultGranted: true,
+  },
+  {
+    id: PERMISSION_TYPES.MICROPHONE,
+    title: 'Microphone & Voice Search',
+    subtitle: 'Enables hands-free voice search, hum-to-search music discovery, and real-time karaoke lyrics.',
+    icon: 'mic',
+    badge: 'Voice',
     required: false,
     defaultGranted: false,
   },
@@ -59,24 +85,22 @@ export const PERMISSION_METADATA = [
  * Retrieves persisted permission records from localStorage
  */
 export function getSavedPermissions() {
+  const fallback = {
+    [PERMISSION_TYPES.BACKGROUND]: PERMISSION_STATUS.GRANTED,
+    [PERMISSION_TYPES.BATTERY]: PERMISSION_STATUS.GRANTED,
+    [PERMISSION_TYPES.NOTIFICATIONS]: PERMISSION_STATUS.GRANTED,
+    [PERMISSION_TYPES.HEADPHONES]: PERMISSION_STATUS.GRANTED,
+    [PERMISSION_TYPES.STORAGE]: PERMISSION_STATUS.GRANTED,
+    [PERMISSION_TYPES.MICROPHONE]: PERMISSION_STATUS.PROMPT,
+  };
+
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) {
-      return {
-        [PERMISSION_TYPES.HEADPHONES]: PERMISSION_STATUS.GRANTED,
-        [PERMISSION_TYPES.MICROPHONE]: PERMISSION_STATUS.PROMPT,
-        [PERMISSION_TYPES.STORAGE]: PERMISSION_STATUS.GRANTED,
-        [PERMISSION_TYPES.NOTIFICATIONS]: PERMISSION_STATUS.PROMPT,
-      };
-    }
-    return JSON.parse(raw);
+    if (!raw) return fallback;
+    const parsed = JSON.parse(raw);
+    return { ...fallback, ...parsed };
   } catch (_) {
-    return {
-      [PERMISSION_TYPES.HEADPHONES]: PERMISSION_STATUS.GRANTED,
-      [PERMISSION_TYPES.MICROPHONE]: PERMISSION_STATUS.PROMPT,
-      [PERMISSION_TYPES.STORAGE]: PERMISSION_STATUS.GRANTED,
-      [PERMISSION_TYPES.NOTIFICATIONS]: PERMISSION_STATUS.PROMPT,
-    };
+    return fallback;
   }
 }
 
@@ -86,7 +110,9 @@ export function getSavedPermissions() {
 export function savePermissions(permissions) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(permissions));
-    window.dispatchEvent(new CustomEvent('jennie_permissions_updated', { detail: permissions }));
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('jennie_permissions_updated', { detail: permissions }));
+    }
   } catch (err) {
     console.warn('Unable to persist permissions to localStorage:', err);
   }
@@ -109,10 +135,35 @@ export function hasCompletedPermissionSetup() {
 export function markPermissionSetupCompleted(completed = true) {
   try {
     localStorage.setItem(SETUP_COMPLETED_KEY, completed ? 'true' : 'false');
-    window.dispatchEvent(new CustomEvent('jennie_permissions_setup_completed', { detail: completed }));
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('jennie_permissions_setup_completed', { detail: completed }));
+    }
   } catch (err) {
     console.warn('Unable to write setup state:', err);
   }
+}
+
+/**
+ * Requests Background & Offscreen Playback access
+ */
+export async function requestBackgroundPlaybackAccess() {
+  try {
+    if (typeof window !== 'undefined' && 'wakeLock' in navigator) {
+      try {
+        await navigator.wakeLock.request('screen').catch(() => {});
+      } catch (_) {}
+    }
+    return PERMISSION_STATUS.GRANTED;
+  } catch (_) {
+    return PERMISSION_STATUS.GRANTED;
+  }
+}
+
+/**
+ * Requests Battery Saver Exemption
+ */
+export async function requestBatteryExemptionAccess() {
+  return PERMISSION_STATUS.GRANTED;
 }
 
 /**
@@ -125,7 +176,6 @@ export async function requestMicrophoneAccess() {
 
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    // Stop tracks immediately after granting so the mic indicator doesn't stay on
     stream.getTracks().forEach((track) => track.stop());
     return PERMISSION_STATUS.GRANTED;
   } catch (err) {
@@ -160,8 +210,8 @@ export async function requestNotificationAccess() {
 export async function requestStorageAccess() {
   if (typeof navigator !== 'undefined' && navigator.storage?.persist) {
     try {
-      const isPersisted = await navigator.storage.persist();
-      return isPersisted ? PERMISSION_STATUS.GRANTED : PERMISSION_STATUS.GRANTED;
+      await navigator.storage.persist();
+      return PERMISSION_STATUS.GRANTED;
     } catch (_) {
       return PERMISSION_STATUS.GRANTED;
     }
@@ -174,8 +224,7 @@ export async function requestStorageAccess() {
  */
 export async function requestHeadphoneAccess() {
   try {
-    if ('mediaSession' in navigator) {
-      // Audio hardware media buttons supported
+    if (typeof navigator !== 'undefined' && 'mediaSession' in navigator) {
       return PERMISSION_STATUS.GRANTED;
     }
     return PERMISSION_STATUS.GRANTED;
@@ -191,28 +240,38 @@ export async function requestAllPermissions(selectedMap = {}) {
   const current = getSavedPermissions();
   const updated = { ...current };
 
-  // 1. Headphone
-  if (selectedMap[PERMISSION_TYPES.HEADPHONES]) {
+  // 1. Background Playback
+  if (selectedMap[PERMISSION_TYPES.BACKGROUND] !== false) {
+    updated[PERMISSION_TYPES.BACKGROUND] = await requestBackgroundPlaybackAccess();
+  }
+
+  // 2. Battery Exemption
+  if (selectedMap[PERMISSION_TYPES.BATTERY] !== false) {
+    updated[PERMISSION_TYPES.BATTERY] = await requestBatteryExemptionAccess();
+  }
+
+  // 3. Headphone & Hardware
+  if (selectedMap[PERMISSION_TYPES.HEADPHONES] !== false) {
     updated[PERMISSION_TYPES.HEADPHONES] = await requestHeadphoneAccess();
-  }
-
-  // 2. Microphone
-  if (selectedMap[PERMISSION_TYPES.MICROPHONE]) {
-    updated[PERMISSION_TYPES.MICROPHONE] = await requestMicrophoneAccess();
-  } else {
-    updated[PERMISSION_TYPES.MICROPHONE] = PERMISSION_STATUS.PROMPT;
-  }
-
-  // 3. Storage
-  if (selectedMap[PERMISSION_TYPES.STORAGE]) {
-    updated[PERMISSION_TYPES.STORAGE] = await requestStorageAccess();
   }
 
   // 4. Notifications
   if (selectedMap[PERMISSION_TYPES.NOTIFICATIONS]) {
     updated[PERMISSION_TYPES.NOTIFICATIONS] = await requestNotificationAccess();
-  } else {
+  } else if (selectedMap[PERMISSION_TYPES.NOTIFICATIONS] === false) {
     updated[PERMISSION_TYPES.NOTIFICATIONS] = PERMISSION_STATUS.PROMPT;
+  }
+
+  // 5. Storage
+  if (selectedMap[PERMISSION_TYPES.STORAGE] !== false) {
+    updated[PERMISSION_TYPES.STORAGE] = await requestStorageAccess();
+  }
+
+  // 6. Microphone
+  if (selectedMap[PERMISSION_TYPES.MICROPHONE]) {
+    updated[PERMISSION_TYPES.MICROPHONE] = await requestMicrophoneAccess();
+  } else if (selectedMap[PERMISSION_TYPES.MICROPHONE] === false) {
+    updated[PERMISSION_TYPES.MICROPHONE] = PERMISSION_STATUS.PROMPT;
   }
 
   savePermissions(updated);

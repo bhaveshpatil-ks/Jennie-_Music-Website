@@ -18,7 +18,9 @@ describe('App Permissions Service', () => {
     localStorage.clear();
   });
 
-  test('contains all 4 expected permission types: headphones, mic, storage, notifications', () => {
+  test('contains all expected permission types: background, battery, headphones, mic, storage, notifications', () => {
+    expect(PERMISSION_TYPES.BACKGROUND).toBe('background');
+    expect(PERMISSION_TYPES.BATTERY).toBe('battery');
     expect(PERMISSION_TYPES.HEADPHONES).toBe('headphones');
     expect(PERMISSION_TYPES.MICROPHONE).toBe('microphone');
     expect(PERMISSION_TYPES.STORAGE).toBe('storage');
@@ -26,7 +28,7 @@ describe('App Permissions Service', () => {
   });
 
   test('validates metadata exists with titles and descriptions for each permission', () => {
-    expect(PERMISSION_METADATA.length).toBe(4);
+    expect(PERMISSION_METADATA.length).toBe(6);
     PERMISSION_METADATA.forEach((meta) => {
       expect(meta.id).toBeDefined();
       expect(meta.title).toBeDefined();
@@ -35,8 +37,10 @@ describe('App Permissions Service', () => {
     });
   });
 
-  test('defaults headphone and storage permissions to granted initially', () => {
+  test('defaults essential playback permissions to granted initially', () => {
     const defaults = getSavedPermissions();
+    expect(defaults[PERMISSION_TYPES.BACKGROUND]).toBe(PERMISSION_STATUS.GRANTED);
+    expect(defaults[PERMISSION_TYPES.BATTERY]).toBe(PERMISSION_STATUS.GRANTED);
     expect(defaults[PERMISSION_TYPES.HEADPHONES]).toBe(PERMISSION_STATUS.GRANTED);
     expect(defaults[PERMISSION_TYPES.STORAGE]).toBe(PERMISSION_STATUS.GRANTED);
     expect(defaults[PERMISSION_TYPES.MICROPHONE]).toBe(PERMISSION_STATUS.PROMPT);
@@ -44,6 +48,8 @@ describe('App Permissions Service', () => {
 
   test('properly saves and retrieves updated permission states', () => {
     const custom = {
+      [PERMISSION_TYPES.BACKGROUND]: PERMISSION_STATUS.GRANTED,
+      [PERMISSION_TYPES.BATTERY]: PERMISSION_STATUS.GRANTED,
       [PERMISSION_TYPES.HEADPHONES]: PERMISSION_STATUS.GRANTED,
       [PERMISSION_TYPES.MICROPHONE]: PERMISSION_STATUS.GRANTED,
       [PERMISSION_TYPES.STORAGE]: PERMISSION_STATUS.GRANTED,

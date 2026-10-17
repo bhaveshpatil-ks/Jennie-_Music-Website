@@ -6,6 +6,8 @@ import {
   savePermissions,
   hasCompletedPermissionSetup,
   markPermissionSetupCompleted,
+  requestBackgroundPlaybackAccess,
+  requestBatteryExemptionAccess,
   requestMicrophoneAccess,
   requestNotificationAccess,
   requestStorageAccess,
@@ -29,7 +31,6 @@ export const usePermissionStore = create((set, get) => ({
     set({
       permissions: saved,
       hasCompletedSetup: completed,
-      // If the user hasn't completed permission setup, open the modal
       isSetupModalOpen: !completed,
     });
   },
@@ -40,6 +41,30 @@ export const usePermissionStore = create((set, get) => ({
     const updated = { ...current, [type]: status };
     savePermissions(updated);
     set({ permissions: updated });
+  },
+
+  // Request Background Playback
+  requestBackground: async () => {
+    set({ isRequesting: true });
+    try {
+      const status = await requestBackgroundPlaybackAccess();
+      get().updatePermission(PERMISSION_TYPES.BACKGROUND, status);
+      return status;
+    } finally {
+      set({ isRequesting: false });
+    }
+  },
+
+  // Request Battery Exemption
+  requestBattery: async () => {
+    set({ isRequesting: true });
+    try {
+      const status = await requestBatteryExemptionAccess();
+      get().updatePermission(PERMISSION_TYPES.BATTERY, status);
+      return status;
+    } finally {
+      set({ isRequesting: false });
+    }
   },
 
   // Request Microphone permission
