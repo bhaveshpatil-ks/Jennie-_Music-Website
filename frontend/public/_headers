@@ -1,0 +1,11 @@
+/downloads/Jennie-Music-Setup.exe
+  Content-Type: application/vnd.microsoft.portable-executable
+  Content-Disposition: attachment; filename="Jennie-Music-Setup.exe"
+
+/downloads/Jennie-Music.exe
+  Content-Type: application/vnd.microsoft.portable-executable
+  Content-Disposition: attachment; filename="Jennie-Music.exe"
+
+/downloads/Jennie-Music.apk
+  Content-Type: application/vnd.android.package-archive
+  Content-Disposition: attachment; filename="Jennie-Music.apk"

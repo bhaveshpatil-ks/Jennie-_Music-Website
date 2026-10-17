@@ -14,11 +14,13 @@ import { useLibraryStore } from '../store/useLibraryStore';
 export const DownloadApp = () => {
   const setActiveView = useLibraryStore((state) => state.setActiveView);
   const [copiedLink, setCopiedLink] = useState(false);
+  const [copiedWindowsLink, setCopiedWindowsLink] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState(null);
 
   const ANDROID_DIRECT_URL = '/downloads/Jennie-Music.apk';
   const ANDROID_FALLBACK_URL = 'https://github.com/bhaveshpatil-ks/JENNIE_WEB-APP/releases/download/v1.0.37/Jennie-Music.apk';
-  const WINDOWS_SHORTCUT_URL = '/downloads/Jennie-Music-Windows.url';
+  const WINDOWS_DIRECT_URL = '/downloads/Jennie-Music-Setup.exe';
+  const WINDOWS_FALLBACK_URL = '/downloads/Jennie-Music.exe';
   const RELEASES_PAGE_URL = 'https://github.com/bhaveshpatil-ks/JENNIE_WEB-APP/releases';
 
   const [downloadingAndroid, setDownloadingAndroid] = useState(false);
@@ -49,8 +51,23 @@ export const DownloadApp = () => {
     setTimeout(() => setDownloadingAndroid(false), 2500);
   };
 
-  const handleDownloadWindows = async (e) => {
+  const handleDownloadWindows = (e) => {
     if (e) e.preventDefault();
+    setDownloadingWindows(true);
+    try {
+      const link = document.createElement('a');
+      link.href = WINDOWS_DIRECT_URL;
+      link.download = 'Jennie-Music-Setup.exe';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (_) {
+      window.location.href = WINDOWS_DIRECT_URL;
+    }
+    setTimeout(() => setDownloadingWindows(false), 2500);
+  };
+
+  const handleInstallPWA = async () => {
     if (deferredPrompt) {
       try {
         deferredPrompt.prompt();
@@ -59,20 +76,7 @@ export const DownloadApp = () => {
           setDeferredPrompt(null);
         }
       } catch (_) {}
-      return;
     }
-    setDownloadingWindows(true);
-    try {
-      const link = document.createElement('a');
-      link.href = WINDOWS_SHORTCUT_URL;
-      link.download = 'Jennie-Music.url';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    } catch (_) {
-      window.location.href = WINDOWS_SHORTCUT_URL;
-    }
-    setTimeout(() => setDownloadingWindows(false), 2500);
   };
 
   const handleCopyAndroidLink = () => {
@@ -81,6 +85,15 @@ export const DownloadApp = () => {
       navigator.clipboard.writeText(urlToCopy);
       setCopiedLink(true);
       setTimeout(() => setCopiedLink(false), 2000);
+    } catch (_) {}
+  };
+
+  const handleCopyWindowsLink = () => {
+    try {
+      const urlToCopy = window.location.origin + WINDOWS_DIRECT_URL;
+      navigator.clipboard.writeText(urlToCopy);
+      setCopiedWindowsLink(true);
+      setTimeout(() => setCopiedWindowsLink(false), 2000);
     } catch (_) {}
   };
 
@@ -110,7 +123,7 @@ export const DownloadApp = () => {
         {/* Title & Metadata */}
         <div className="mb-10 sm:mb-12">
           <div className="inline-block px-2.5 py-1 rounded-md bg-white/[0.05] border border-white/10 text-neutral-300 text-xs font-mono uppercase tracking-wider mb-3">
-            Release v1.0.23
+            Release v1.0.38
           </div>
           <h1 className="text-2xl sm:text-4xl font-semibold tracking-tight text-white mb-2">
             Download Jennie Music
@@ -150,11 +163,7 @@ export const DownloadApp = () => {
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-neutral-500 font-bold select-none">•</span>
-                  <span>Synchronized lyrics and client-side playlist caching</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-neutral-500 font-bold select-none">•</span>
-                  <span>YouTube embed recovery engine for copyright restricted tracks</span>
+                  <span>Offline lyrics and high-performance audio engine</span>
                 </li>
               </ul>
             </div>
@@ -223,25 +232,25 @@ export const DownloadApp = () => {
 
               <h2 className="text-lg font-semibold text-white mb-1">Windows</h2>
               <p className="text-xs text-neutral-400 mb-5 font-mono">
-                64-bit Desktop Application
+                Jennie-Music-Setup.exe • Application (.exe)
               </p>
 
               <ul className="space-y-2.5 mb-7 text-xs text-neutral-300">
+                <li className="flex items-start gap-2">
+                  <span className="text-neutral-500 font-bold select-none">•</span>
+                  <span>Native standalone application window (no browser tabs)</span>
+                </li>
                 <li className="flex items-start gap-2">
                   <span className="text-neutral-500 font-bold select-none">•</span>
                   <span>System media keys support (Play, Pause, Skip)</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span className="text-neutral-500 font-bold select-none">•</span>
+                  <span>Desktop & Start Menu shortcut with official icon</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-neutral-500 font-bold select-none">•</span>
                   <span>Background execution with zero audio sleep throttling</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-neutral-500 font-bold select-none">•</span>
-                  <span>Widescreen desktop layout with synchronized lyrics</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-neutral-500 font-bold select-none">•</span>
-                  <span>Taskbar pinning and standalone desktop window</span>
                 </li>
               </ul>
             </div>
@@ -252,31 +261,57 @@ export const DownloadApp = () => {
                 onClick={handleDownloadWindows}
                 className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-white hover:bg-neutral-200 active:scale-[0.99] text-black font-semibold text-xs tracking-tight transition-all cursor-pointer"
               >
-                {deferredPrompt ? (
-                  <>
-                    <Download size={15} />
-                    <span>Install Desktop App</span>
-                  </>
-                ) : downloadingWindows ? (
+                {downloadingWindows ? (
                   <>
                     <Check size={15} className="text-black" />
-                    <span>Downloading Jennie Desktop...</span>
+                    <span>Downloading Jennie-Music-Setup.exe...</span>
                   </>
                 ) : (
                   <>
                     <Download size={15} />
-                    <span>Download for Windows</span>
+                    <span>Download Windows App (.exe)</span>
                   </>
                 )}
               </button>
 
-              <button
-                type="button"
-                onClick={() => setActiveView('home')}
-                className="w-full flex items-center justify-center py-2 px-3 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-neutral-300 hover:text-white text-xs font-medium border border-white/[0.06] transition-colors cursor-pointer"
-              >
-                <span>Continue on Web Player</span>
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleCopyWindowsLink}
+                  className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-neutral-300 hover:text-white text-xs font-medium border border-white/[0.06] transition-colors cursor-pointer"
+                >
+                  {copiedWindowsLink ? (
+                    <>
+                      <Check size={13} className="text-white" />
+                      <span>Copied Link</span>
+                    </>
+                  ) : (
+                    <>
+                      <Copy size={13} />
+                      <span>Copy Link</span>
+                    </>
+                  )}
+                </button>
+
+                <a
+                  href={WINDOWS_FALLBACK_URL}
+                  download="Jennie-Music.exe"
+                  className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-neutral-300 hover:text-white text-xs font-medium border border-white/[0.06] transition-colors"
+                >
+                  <ExternalLink size={13} />
+                  <span>Direct (.exe)</span>
+                </a>
+              </div>
+
+              {deferredPrompt && (
+                <button
+                  type="button"
+                  onClick={handleInstallPWA}
+                  className="w-full flex items-center justify-center gap-1.5 py-2 px-3 rounded-lg bg-white/[0.06] hover:bg-white/[0.1] text-white text-xs font-medium border border-white/10 transition-colors cursor-pointer mt-1"
+                >
+                  <span>Install via Browser App</span>
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -299,9 +334,9 @@ export const DownloadApp = () => {
             <div>
               <h4 className="text-xs font-semibold text-white mb-2">Windows Installation</h4>
               <ol className="space-y-2 list-decimal list-inside text-neutral-300">
-                <li>Click "Get for Windows" or "Install on Windows" above.</li>
-                <li>Follow the installer prompts or browser desktop app confirmation.</li>
-                <li>Pin Jennie Music to your taskbar for quick access.</li>
+                <li>Click <strong>Download Windows App (.exe)</strong> above to download <code className="text-neutral-200 bg-white/5 px-1 py-0.5 rounded font-mono">Jennie-Music-Setup.exe</code>.</li>
+                <li>Double-click the downloaded <code className="text-neutral-200 bg-white/5 px-1 py-0.5 rounded font-mono">Jennie-Music-Setup.exe</code> application.</li>
+                <li>It automatically launches Jennie Music in a standalone desktop window and creates a Desktop shortcut for instant launch.</li>
               </ol>
             </div>
           </div>
