@@ -36,6 +36,7 @@ export const PlayerBar = () => {
   const togglePlay = usePlayerStore((state) => state.togglePlay);
   const nextTrack = usePlayerStore((state) => state.nextTrack);
   const prevTrack = usePlayerStore((state) => state.prevTrack);
+  const seekTo = usePlayerStore((state) => state.seekTo);
   const isShuffled = usePlayerStore((state) => state.isShuffled);
   const toggleShuffle = usePlayerStore((state) => state.toggleShuffle);
   const repeatMode = usePlayerStore((state) => state.repeatMode);
@@ -57,14 +58,24 @@ export const PlayerBar = () => {
   const isYouTubeTrack = currentTrack.source === 'youtube' || Boolean(currentTrack.youtubeId);
   const progressPercent = duration > 0 ? (currentTime / duration) * 100 : 0;
 
+  const handleMobileSeek = (e) => {
+    e.stopPropagation();
+    if (!duration || duration <= 0) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const clickX = (e.clientX !== undefined ? e.clientX : (e.touches && e.touches[0] ? e.touches[0].clientX : 0)) - rect.left;
+    const ratio = Math.max(0, Math.min(1, clickX / rect.width));
+    seekTo(ratio * duration);
+  };
+
   return (
     <>
-      {/* Mobile Spotify-Style Mini Player Bar (< 768px, sits right above bottom nav) */}
+      {/* Mobile Mini Player Bar (< 768px, sits right above bottom nav, styled per user sketch) */}
       <div
         role="region"
         aria-label="Mobile Mini Player"
-        className="md:hidden fixed bottom-[64px] left-2 right-2 z-40 bg-[#111111]/95 backdrop-blur-3xl border border-white/[0.08] rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] p-2.5 flex flex-col overflow-hidden animate-luxury-slide-up"
+        className="md:hidden fixed bottom-[64px] left-2 right-2 z-40 bg-[#121214]/95 backdrop-blur-2xl border border-white/[0.12] rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.85)] p-2.5 flex flex-col overflow-hidden animate-luxury-slide-up"
       >
+        {/* Main Body Row: Track info on left, Play/Pause toggle on right */}
         <div className="flex items-center justify-between gap-3">
           {/* Tappable track info to expand fullscreen player */}
           <div
@@ -106,9 +117,9 @@ export const PlayerBar = () => {
             </div>
           </div>
 
-          {/* Quick Actions: Output Device (Sketch 3), Playlist, Like, Play/Pause */}
-          <div className="flex items-center gap-1 flex-shrink-0">
-            {/* Output Device selector from Sketch 3 */}
+          {/* Quick Actions & Play/Pause Button on Right */}
+          <div className="flex items-center gap-1.5 flex-shrink-0">
+            {/* Output Device selector */}
             <button
               type="button"
               onClick={() => setShowDevicePicker(true)}
@@ -116,29 +127,29 @@ export const PlayerBar = () => {
               title="Listening Device"
               className="p-1.5 rounded-full text-neutral-400 hover:text-emerald-400 transition-colors"
             >
-              <Headphones size={17} className={selectedDeviceId === 'headphones' ? 'text-emerald-400' : 'text-neutral-400'} />
+              <Headphones size={16} className={selectedDeviceId === 'headphones' ? 'text-emerald-400' : 'text-neutral-400'} />
             </button>
 
-            <div className="flex items-center gap-0.5">
-              <button
-                type="button"
-                onClick={() => setIsPlaylistModalOpen(true)}
-                aria-label="Add to playlist"
-                title="Add to Playlist"
-                className="p-1.5 rounded-full text-neutral-400 hover:text-white transition-colors"
-              >
-                <ListPlus size={18} />
-              </button>
-              <div className="p-1">
-                <LikeButton trackId={currentTrack.id} size={18} />
-              </div>
+            <button
+              type="button"
+              onClick={() => setIsPlaylistModalOpen(true)}
+              aria-label="Add to playlist"
+              title="Add to Playlist"
+              className="p-1.5 rounded-full text-neutral-400 hover:text-white transition-colors"
+            >
+              <ListPlus size={17} />
+            </button>
+
+            <div className="p-0.5">
+              <LikeButton trackId={currentTrack.id} size={17} />
             </div>
 
+            {/* Play/Pause Toggle Pill */}
             <button
               type="button"
               onClick={togglePlay}
               aria-label={isPlaying ? "Pause" : "Play"}
-              className="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center transition-all duration-300 hover:bg-neutral-200 active:opacity-75 shadow-md ml-0.5"
+              className="w-10 h-10 rounded-full bg-white text-black flex items-center justify-center transition-all duration-300 hover:bg-neutral-200 active:scale-95 shadow-md ml-0.5 flex-shrink-0"
             >
               {isPlaying ? (
                 <Pause size={18} className="fill-black" />
@@ -149,12 +160,53 @@ export const PlayerBar = () => {
           </div>
         </div>
 
-        {/* Progress Bar line along bottom of mini card */}
-        <div className="w-full h-[2.5px] bg-white/10 rounded-full mt-2 overflow-hidden">
+        {/* Bottom Row from User's Sketch: Left arrow (<--) + Red progress scrubber line + Right arrow (-->) */}
+        <div className="flex items-center gap-2 mt-2 pt-1 border-t border-white/[0.06]">
+          {/* Left Arrow: Previous Track */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              prevTrack();
+            }}
+            aria-label="Previous track"
+            title="Previous track"
+            className="w-7 h-7 flex items-center justify-center rounded-full text-white/80 hover:text-white hover:bg-white/10 active:scale-90 transition-all flex-shrink-0"
+          >
+            <SkipBack size={15} className="fill-current" />
+          </button>
+
+          {/* Full-Width Red Scrubber / Progress Bar from User's Drawing */}
           <div
-            className="h-full bg-white rounded-full transition-all duration-300"
-            style={{ width: `${progressPercent}%` }}
-          />
+            onClick={handleMobileSeek}
+            role="progressbar"
+            aria-label="Track progress scrubber"
+            aria-valuenow={currentTime}
+            aria-valuemin={0}
+            aria-valuemax={duration || 180}
+            className="flex-1 h-6 flex items-center cursor-pointer group px-0.5 relative"
+          >
+            <div className="w-full h-1.5 bg-white/15 rounded-full overflow-hidden relative">
+              <div
+                className="h-full bg-red-500 rounded-full transition-all duration-150 shadow-[0_0_8px_rgba(239,68,68,0.7)]"
+                style={{ width: `${progressPercent}%` }}
+              />
+            </div>
+          </div>
+
+          {/* Right Arrow: Next Track */}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              nextTrack(true);
+            }}
+            aria-label="Next track"
+            title="Next track"
+            className="w-7 h-7 flex items-center justify-center rounded-full text-white/80 hover:text-white hover:bg-white/10 active:scale-90 transition-all flex-shrink-0"
+          >
+            <SkipForward size={15} className="fill-current" />
+          </button>
         </div>
       </div>
 
