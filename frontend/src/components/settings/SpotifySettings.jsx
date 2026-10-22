@@ -50,6 +50,10 @@ export function SpotifySettings({ onClose, onOpenCookieSettings }) {
     toggleNormalizeVolume,
     monoAudio,
     toggleMonoAudio,
+    backgroundPlayback,
+    toggleBackgroundPlayback,
+    youtubeNewReleasesSync,
+    toggleYoutubeNewReleasesSync,
     cacheSize,
     clearAppCache,
   } = useSettingsStore();
@@ -521,7 +525,7 @@ export function SpotifySettings({ onClose, onOpenCookieSettings }) {
                 </div>
               </div>
               <span className="text-xs font-mono font-bold text-white bg-white/10 px-2.5 py-1 rounded-full border border-white/10">
-                v0.1.0
+                v1.1.0 (Latest Release)
               </span>
             </div>
           </div>
@@ -643,6 +647,56 @@ export function SpotifySettings({ onClose, onOpenCookieSettings }) {
                 <div
                   className={`w-5 h-5 rounded-full transition-transform ${
                     monoAudio ? 'translate-x-5 bg-black' : 'translate-x-0 bg-neutral-400'
+                  }`}
+                />
+              </button>
+            </div>
+
+            <div className="h-px bg-zinc-800/80" />
+
+            {/* Background & Offscreen Playback */}
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <h3 className="text-sm font-semibold text-white">Background &amp; Offscreen Playback</h3>
+                <p className="text-xs text-neutral-400 mt-0.5">
+                  Keep music streaming when the app is minimized, switching apps, or screen is turned off
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={toggleBackgroundPlayback}
+                className={`w-11 h-6 rounded-full transition-colors relative shrink-0 p-0.5 ${
+                  backgroundPlayback !== false ? 'bg-emerald-500' : 'bg-zinc-800 border border-zinc-700'
+                }`}
+              >
+                <div
+                  className={`w-5 h-5 rounded-full transition-transform ${
+                    backgroundPlayback !== false ? 'translate-x-5 bg-black' : 'translate-x-0 bg-neutral-400'
+                  }`}
+                />
+              </button>
+            </div>
+
+            <div className="h-px bg-zinc-800/80" />
+
+            {/* YouTube New Releases Sync */}
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <h3 className="text-sm font-semibold text-white">YouTube New Releases Auto-Sync</h3>
+                <p className="text-xs text-neutral-400 mt-0.5">
+                  Automatically refresh trending 2024-2025 chartbusters and viral tracks
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={toggleYoutubeNewReleasesSync}
+                className={`w-11 h-6 rounded-full transition-colors relative shrink-0 p-0.5 ${
+                  youtubeNewReleasesSync !== false ? 'bg-emerald-500' : 'bg-zinc-800 border border-zinc-700'
+                }`}
+              >
+                <div
+                  className={`w-5 h-5 rounded-full transition-transform ${
+                    youtubeNewReleasesSync !== false ? 'translate-x-5 bg-black' : 'translate-x-0 bg-neutral-400'
                   }`}
                 />
               </button>
