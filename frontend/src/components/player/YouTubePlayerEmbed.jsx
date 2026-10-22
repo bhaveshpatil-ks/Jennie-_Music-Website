@@ -159,6 +159,18 @@ export const YouTubePlayerEmbed = () => {
                 if (!store.isPlaying) {
                   usePlayerStore.setState({ isPlaying: true });
                 }
+              } else if (event.data === 2) {
+                // If YouTube involuntarily paused because app moved to background or screen locked,
+                // and user intended to keep listening (isPlaying = true), resume immediately
+                if (store.isPlaying && (typeof document !== 'undefined' && (document.hidden || document.visibilityState === 'hidden'))) {
+                  setTimeout(() => {
+                    try {
+                      if (usePlayerStore.getState().isPlaying && event.target && typeof event.target.playVideo === 'function') {
+                        event.target.playVideo();
+                      }
+                    } catch (_) {}
+                  }, 120);
+                }
               } else if (event.data === 0) {
                 if (store.repeatMode === 'one') {
                   event.target.seekTo(0, true);
@@ -479,7 +491,8 @@ export const YouTubePlayerEmbed = () => {
   return (
     <div
       ref={containerRef}
-      className="fixed -bottom-[320px] -right-[320px] w-[280px] h-[200px] pointer-events-none -z-50 overflow-hidden"
+      className="fixed top-0 left-0 w-[4px] h-[4px] opacity-[0.01] pointer-events-none -z-50 overflow-hidden"
+      style={{ pointerEvents: 'none' }}
       aria-hidden="true"
     >
       <div id="yt-player-target" />
