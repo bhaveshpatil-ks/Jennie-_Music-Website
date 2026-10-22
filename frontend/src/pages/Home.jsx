@@ -11,7 +11,7 @@ import {
   User,
   Play,
 } from 'lucide-react';
-import { MOCK_TRACKS, GENRES, FEATURED_MIXES } from '../data/mockTracks';
+import { MOCK_TRACKS, GENRES, FEATURED_MIXES, YOUTUBE_NEW_RELEASES } from '../data/mockTracks';
 import { ARTISTS_DATA } from '../data/artistsData';
 import { TrackCard } from '../components/tracks';
 import { GenreTile } from '../components/common';
@@ -53,6 +53,10 @@ export const Home = () => {
       mounted = false;
     };
   }, []);
+
+  const youtubeNewReleasesTracks = (YOUTUBE_NEW_RELEASES || [])
+    .map((id) => MOCK_TRACKS.find((t) => t.id === id))
+    .filter(Boolean);
 
   const top50Tracks = [
     'yt-BddP6PYo2gs', // Kesariya
@@ -474,6 +478,13 @@ export const Home = () => {
       </section>
 
       {/* Horizontal Shelves - Chartbusters & Hits */}
+      <ShelfRow
+        title="🔥 Fresh YouTube Releases & Chartbusters (2024-2025)"
+        icon={Flame}
+        tracks={youtubeNewReleasesTracks}
+        id="youtube_new_releases"
+      />
+
       <ShelfRow
         title="🇮🇳 Top 50 - India (Most Played Songs)"
         icon={Flame}
