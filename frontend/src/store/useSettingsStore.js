@@ -35,6 +35,8 @@ const loadInitialSettings = () => {
     listeningActivity: true,
     hifiStudioMaster: true,
     streamingBitrate: '320 kbps',
+    backgroundPlayback: true,
+    youtubeNewReleasesSync: true,
   };
 };
 
@@ -57,6 +59,8 @@ export const useSettingsStore = create((set, get) => {
         listeningActivity: next.listeningActivity,
         hifiStudioMaster: next.hifiStudioMaster,
         streamingBitrate: next.streamingBitrate,
+        backgroundPlayback: next.backgroundPlayback,
+        youtubeNewReleasesSync: next.youtubeNewReleasesSync,
       }));
     } catch (e) {}
   };
@@ -132,6 +136,20 @@ export const useSettingsStore = create((set, get) => {
     toggleListeningActivity: () => {
       const next = !get().listeningActivity;
       const updates = { listeningActivity: next };
+      persist(updates);
+      set(updates);
+    },
+
+    toggleBackgroundPlayback: () => {
+      const next = !get().backgroundPlayback;
+      const updates = { backgroundPlayback: next };
+      persist(updates);
+      set(updates);
+    },
+
+    toggleYoutubeNewReleasesSync: () => {
+      const next = !get().youtubeNewReleasesSync;
+      const updates = { youtubeNewReleasesSync: next };
       persist(updates);
       set(updates);
     },
