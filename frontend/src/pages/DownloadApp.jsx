@@ -123,7 +123,7 @@ export const DownloadApp = () => {
         {/* Title & Metadata */}
         <div className="mb-10 sm:mb-12">
           <div className="inline-block px-2.5 py-1 rounded-md bg-white/[0.05] border border-white/10 text-neutral-300 text-xs font-mono uppercase tracking-wider mb-3">
-            Release v1.0.38
+            Release v1.1.0
           </div>
           <h1 className="text-2xl sm:text-4xl font-semibold tracking-tight text-white mb-2">
             Download Jennie Music
