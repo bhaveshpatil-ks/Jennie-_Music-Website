@@ -73,7 +73,7 @@ export const triggerHaptic = async (type = 'light') => {
 
 /**
  * Android hardware back button handler
- * Closes active overlays/drawers or goes back in history
+ * Closes active overlays/drawers or minimizes app to background if music is playing
  */
 export const setupHardwareBackButton = (onBackRequested) => {
   if (!isNativePlatform()) return () => {};
@@ -89,7 +89,17 @@ export const setupHardwareBackButton = (onBackRequested) => {
     if (canGoBack) {
       window.history.back();
     } else {
-      App.exitApp();
+      // If audio is playing, minimize app to background instead of killing process
+      const isPlaying = typeof window !== 'undefined' && Boolean(window.__jennieIsPlaying);
+      if (isPlaying) {
+        try {
+          App.minimizeApp().catch(() => App.exitApp());
+        } catch (_) {
+          App.exitApp();
+        }
+      } else {
+        App.exitApp();
+      }
     }
   }).then((handle) => {
     listenerHandle = handle;
