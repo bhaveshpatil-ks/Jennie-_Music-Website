@@ -69,9 +69,62 @@ const stopSilentCarrier = () => {
   }
 };
 
+let wakeLockSentinel = null;
+const acquireWakeLock = async () => {
+  try {
+    if (typeof navigator !== 'undefined' && 'wakeLock' in navigator && !wakeLockSentinel) {
+      wakeLockSentinel = await navigator.wakeLock.request('screen');
+      wakeLockSentinel.addEventListener('release', () => {
+        wakeLockSentinel = null;
+      });
+    }
+  } catch (_) {}
+};
+
+const releaseWakeLock = async () => {
+  try {
+    if (wakeLockSentinel) {
+      await wakeLockSentinel.release();
+      wakeLockSentinel = null;
+    }
+  } catch (_) {}
+};
+
 // Synchronize browser MediaSession API (native OS lock screen & background controls)
+// and Native Android MediaPlaybackService bridge
 const syncMediaSession = (track, isPlaying) => {
-  if (typeof window === 'undefined' || !('mediaSession' in navigator) || !track) return;
+  if (typeof window === 'undefined') return;
+
+  // 1. Sync Native Android Foreground Service for lockscreen controls and CPU partial wakelock
+  try {
+    if (window.AndroidMediaBridge && typeof window.AndroidMediaBridge.updatePlayback === 'function') {
+      if (track && isPlaying) {
+        window.AndroidMediaBridge.updatePlayback(
+          track.title || 'Unknown Track',
+          track.artist || 'Jennie Music',
+          true
+        );
+      } else if (track) {
+        window.AndroidMediaBridge.updatePlayback(
+          track.title || 'Unknown Track',
+          track.artist || 'Jennie Music',
+          false
+        );
+      } else {
+        window.AndroidMediaBridge.stopPlayback?.();
+      }
+    }
+  } catch (_) {}
+
+  // 2. Manage Web Screen WakeLock
+  if (isPlaying) {
+    acquireWakeLock();
+  } else {
+    releaseWakeLock();
+  }
+
+  // 3. Sync standard Web MediaSession
+  if (!('mediaSession' in navigator) || !track) return;
   try {
     const cover = getTrackCoverUrl(track);
     navigator.mediaSession.metadata = new MediaMetadata({
@@ -834,4 +887,22 @@ if (typeof document !== 'undefined') {
       }
     } catch (_) {}
   });
+}
+
+// Register native Android notification media button bridge handler
+if (typeof window !== 'undefined') {
+  window.__onNativeMediaAction = (action) => {
+    try {
+      const store = usePlayerStore.getState();
+      if (action === 'play_pause') {
+        store.togglePlay();
+      } else if (action === 'next') {
+        store.nextTrack(true);
+      } else if (action === 'prev') {
+        store.prevTrack();
+      } else if (action === 'stop') {
+        store.pause();
+      }
+    } catch (_) {}
+  };
 }
