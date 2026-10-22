@@ -1,7 +1,7 @@
 {
   "name": "jennie-music",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.1.0",
   "description": "Jennie — Elite High-Fidelity Music Streaming Platform with Spotify-Style Artist Profiles, Synchronized Lyrics, and Seamless Background Playback",
   "homepage": "https://jennie-ee.netlify.app/",
   "type": "module",
